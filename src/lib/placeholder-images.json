@@ -1,3 +1,16 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "studio",
+      "description": "Professional music studio environment",
+      "imageUrl": "https://picsum.photos/seed/studio/1920/1080",
+      "imageHint": "music studio"
+    },
+    {
+      "id": "abstract-beats",
+      "description": "Abstract visual representation of sound waves",
+      "imageUrl": "https://picsum.photos/seed/beats/1920/1080",
+      "imageHint": "abstract audio"
+    }
+  ]
 }
