@@ -500,6 +500,7 @@ npm run cli
 - Chat reader/integration
 - Web UI polish (design system refinement)
 - Multi-platform support (Twitch, etc.)
+- Compliance module (FR-5.0) — audit + source verification
 
 ### **v3.0 Vision**
 
@@ -511,11 +512,48 @@ npm run cli
 
 ---
 
+## 11. Deployment & Compliance (CRITICAL) ⚠️
+
+**See separate document**: `compliance-and-deployment.md`
+
+This comprehensive guide covers:
+
+**Production Server**:
+- Express.js + systemd (not python http.server)
+- PM2 alternative (process manager)
+- Nginx reverse proxy (optional, for scaling)
+
+**NCS Music Compliance** (CRITICAL for YouTube):
+- Source verification (official NCS only)
+- Metadata `.json` source field validation
+- Crediting format (required for claim-free protection)
+- Strike resolution procedure
+- Pre-launch compliance checklist
+
+**Key Locked Decisions**:
+- **Decision 16**: Use Express.js + systemd
+- **Decision 17**: NCS music source verification + compliance module
+
+**Before Launch, You Must**:
+- ✅ All audio from official NCS sources (ncs.io, NCS YouTube, etc.)
+- ✅ Metadata `.json` files include `source` with official NCS link
+- ✅ Stream description includes proper NCS credits
+- ✅ Express server + systemd running (not python http.server)
+- ✅ Compliance check passes (no non-NCS music mixing)
+
+**If You Get a Claim**:
+- Check claiming party (some are false positives)
+- Contact NCS with evidence (they investigate)
+- Expected: 5-10 business days resolution
+
+---
+
 ## 📝 Revision History
 
 | Date | Version | Changes |
 |------|---------|---------|
-| 2026-06-06 | 2.0-addendum | Initial creation |
+| 2026-06-06 | 2.0-addendum | Initial creation (sections 1-10) |
+| 2026-06-06 | 2.0-addendum-v2 | Added section 11 (deployment & compliance) |
 
 ---
 

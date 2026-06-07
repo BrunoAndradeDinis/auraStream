@@ -274,6 +274,60 @@ A v2.0 completa três frentes críticas:
 
 ---
 
+### **Fase 5: Compliance & Audit** ⚖️
+
+#### FR-5.0 — Compliance & Audit Module (NEW)
+**O what**: Dashboard + CLI compliance checker para validar que ALL audio vem de fontes oficiais NCS (evita YouTube strikes).
+
+**Detalhes**:
+- **Pre-Stream Verification**:
+  - CLI: Comando `compliance check` antes de `start streaming`
+  - Dashboard: Button "Verify Compliance" (red/yellow/green status)
+  - Valida: TODOS os `.json` files possuem `source` field com URL oficial NCS
+  - Bloqueia start se fonte inválida detectada (com warning claro)
+
+- **Source Validation Rules**:
+  - ✅ Valid: `ncs.io/*`, `youtube.com/c/NoCopyrightSounds`, `spotify.com/*NoCopyrightSounds*`, `soundcloud.com/nocopyrightsounds`, `ncs.lnk.to/*`
+  - ❌ Invalid: Third-party downloaders, re-uploads, URLs not from official NCS
+  - Whitelist mantida em `src/lib/compliance-sources.ts`
+
+- **Audit Trail**:
+  - Log EACH track streamed com: `{ track, source, timestamp, status: 'played' }`
+  - Armazenado em `./logs/compliance-audit.jsonl`
+  - Usável pra defesa se receber YouTube claim (prova que usou NCS oficial)
+
+- **Dashboard Widget**:
+  - Card "Compliance Status" (top-right próximo live indicator)
+  - Green ✅: "All tracks verified from official NCS"
+  - Yellow ⚠️: "X tracks missing source verification" (list quais)
+  - Red ❌: "BLOCKED: Non-NCS source detected" + "Track: X | Source: Y"
+  - Action: "Fix Now" → link pra compliance guide
+
+- **CLI Integration**:
+  - Menu item: "Check Compliance"
+  - Output: Table com status de cada track
+  - Exemplo:
+    ```
+    ✅ ceres-tame-pull-me-down → ncs.io/c_pullmedown
+    ✅ other-track → ncs.io/c_other
+    ❌ suspicious-track → unknown-site.com (BLOCKED)
+    ```
+
+- **NCS Strike Resolution Helper**:
+  - If claim received: CLI option "Report claim to NCS"
+  - Pre-fills: Video URL, track name, compliance log
+  - Links to: https://ncs.io/usage-policy/3/i-received-a-claim-strike
+
+- **Tech Stack**:
+  - Validation logic in `src/lib/compliance.ts`
+  - CLI command via `src/cli/compliance.ts`
+  - Dashboard component: `src/components/ComplianceStatus.tsx`
+  - Audit logger: `src/lib/audit-logger.ts`
+
+- **Status**: ✅ APPROVED FOR v2.0 (per Bruno's decision)
+
+---
+
 ## 🎬 User Journey — "Uma Sessão de Transmissão"
 
 **Actor**: Bruno (operador/creator)
@@ -383,9 +437,12 @@ A v2.0 completa três frentes críticas:
 - [ ] Metadata JSON schema (FR-3.1)
 - [ ] IA batch generation (primeira load)
 
-### **Sprint 4: UI Elevation** (Week 4)
+### **Sprint 4: UI Elevation & Compliance** (Week 4)
 - [ ] Dashboard redesign (FR-2.1)
 - [ ] MiniPlayer cinematic overlay (FR-2.2)
+- [ ] Compliance & Audit module (FR-5.0) — Dashboard widget + CLI commands
+- [ ] NCS source validation logic
+- [ ] Audit trail logging
 - [ ] Polish & animations
 
 ### **Sprint 4.5: Auto-Shutdown (OPTIONAL)** (Week 4 end)
