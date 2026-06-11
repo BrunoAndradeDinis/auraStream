@@ -101,14 +101,32 @@ export function auditLog(
 
 ## Checklist de Implementação
 
-- [ ] Implementar `auditLog()` em `server/compliance.ts`
-- [ ] Verificar: `./logs/` criado automaticamente se ausente
-- [ ] Verificar: aprovações geram linha INFO com status APPROVED
-- [ ] Verificar: rejeições geram linha WARNING com status REJECTED
-- [ ] Verificar: arquivo cresce com appends sucessivos (não sobrescreve)
+- [x] Implementar `auditLog()` em `server/compliance.ts`
+- [x] Verificar: `./logs/` criado automaticamente se ausente
+- [x] Verificar: aprovações geram linha INFO com status APPROVED
+- [x] Verificar: rejeições geram linha WARNING com status REJECTED
+- [x] Verificar: arquivo cresce com appends sucessivos (não sobrescreve)
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- `auditLog` é não-bloqueante (async callback via fs.appendFile).
+- Estrutura JSONL facilita queries e parses robustos (linhas separadas por \n).
+- Criada a function que gera o folder `/logs` com flag recursive para evitar problemas em fresh clones.
+
+### Completion Notes
+✅ Story 3.6 (e como dependência da 3.5) completada simultaneamente.
+
+### File List
+- `server/compliance.ts` — modificado
+
+### Change Log
+- 2026-06-11: Audit Trail e persistência logging pro compliance NCS.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

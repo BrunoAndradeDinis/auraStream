@@ -118,14 +118,29 @@ Verificar todas as stories anteriores (4.3 a 4.10) e garantir que os cards usam 
 
 ## Checklist de Implementação
 
-- [ ] Consolidar `.glass-card`, `.btn-primary`, `.btn-secondary` em `globals.css`
-- [ ] Aplicar classes nos cards das stories 4.3 a 4.10
-- [ ] Verificar: glassmorphism visível com blur sobre o canvas da Aurora (Story 4.9)
-- [ ] Verificar: hover nos botões → transição 200ms
-- [ ] Verificar: click nos botões → scale(0.96) e reversão
+- [x] Consolidar `.glass-card`, `.btn-primary`, `.btn-secondary` em `globals.css`
+- [x] Aplicar classes nos cards das stories 4.3 a 4.10
+- [x] Verificar: glassmorphism visível com blur sobre o canvas da Aurora (Story 4.9)
+- [x] Verificar: hover nos botões → transição 200ms
+- [x] Verificar: click nos botões → scale(0.96) e reversão
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Unificado layout das `glass-card` em `globals.css` para centralizar a alteração do opacity e blur de forma padronizada.
+- Aplicado `-webkit-backdrop-filter` default.
+- Classes dos botões re-utilizadas no LogMonitor e StreamConfig.
+
+### Completion Notes
+✅ Story 4.12 completada com estilo premium uniforme.
+
+### Change Log
+- 2026-06-11: Classes globais glassmorphism injetadas.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

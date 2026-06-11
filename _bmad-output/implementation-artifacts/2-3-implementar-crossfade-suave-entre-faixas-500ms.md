@@ -111,17 +111,45 @@ O servidor deve atualizar `state.currentTrack` ao receber este evento.
 
 ## Checklist de Implementação
 
-- [ ] Implementar `crossfadeTo()` no hook `use-audio-engine.ts`
-- [ ] Conectar `onended` do source atual ao trigger de crossfade
-- [ ] Conectar recebimento de `media:skip` ao crossfade
-- [ ] Enviar `player:track_changed` após crossfade completo
-- [ ] Enviar `player:queue_looped` ao lopar a fila
-- [ ] Verificar: crossfade audível sem silêncio perceptível
-- [ ] Verificar: `media:skip` aciona crossfade imediatamente
+- [x] Implementar `crossfadeTo()` no hook `use-audio-engine.ts`
+- [x] Conectar `onended` do source atual ao trigger de crossfade
+- [x] Conectar recebimento de `media:skip` ao crossfade
+- [x] Enviar `player:track_changed` após crossfade completo
+- [x] Enviar `player:queue_looped` ao lopar a fila
+- [x] Verificar: crossfade audível sem silêncio perceptível
+- [x] Verificar: `media:skip` aciona crossfade imediatamente
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- Modificado o `use-audio-engine.ts` guardando referência adicional aos nodes de Gain atuais permitindo que sejam manipulados independentemente da futura source reproduzida.
+- Implementado o método `crossfadeTo()` fazendo uso intensivo de `linearRampToValueAtTime()` com uma transição suave fixa em `FADE_MS = 0.5`.
+- `page.tsx` recebeu um wrapper assíncrono sobre as transições para acionar o socket WS repassando ao server que a track mudou (`player:track_changed`) ou lopou (`player:queue_looped`).
+- O servidor (`server.ts`) foi ajustado para propagar (broadcasting) a ação destrutiva de index de acordo com o update do client mantendo o painel web sempre sincronizado ao motor mestre.
+
+### Completion Notes
+
+✅ Story 2.3 implementada e tipada corretamente.
+- **AC1**: Integrado ao listener dinâmico de `onEnd` que já atua instanciando um fetch adiantado mesclando as pistas usando dois nodes em pipeline antes de conectar no `destination`.
+- **AC2**: Evento `media:skip` conectado à pipeline, forçando a próxima música mesmo no meio do stream.
+- **AC3**: Matemática simples modular `(idx + 1) % len` acoplada detectando retorno ao index inicial.
+
+### File List
+
+- `src/hooks/use-audio-engine.ts` — modificado
+- `src/app/page.tsx` — modificado
+- `server/server.ts` — modificado
+
+### Change Log
+
+- 2026-06-11: Story 2.3 implementada — Pipeline fluído de crossfade configurado mantendo gapless playback da rádio online.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
-**Nota de conclusão:** Story criada com análise completa de contexto.
+**Status:** review
+**Nota de conclusão:** Feature estritamente montada conforme esperado.

@@ -86,15 +86,36 @@ Já tratado na Story 1.4, mas confirmar que:
 
 ## Checklist de Implementação
 
-- [ ] Adicionar `import 'dotenv/config'` como primeira linha de `server/server.ts`
-- [ ] Carregar `YOUTUBE_STREAM_KEY` do `.env` como fallback no `loadState()`
-- [ ] Confirmar handler `config:stream_key` não faz broadcast da chave
-- [ ] Adicionar guard em `media:start_stream` para verificar streamKey
-- [ ] Verificar: chave não aparece em nenhum log
-- [ ] Verificar: `.env` com `YOUTUBE_STREAM_KEY` pré-popula o estado
+- [x] Adicionar `import 'dotenv/config'` como primeira linha de `server/server.ts`
+- [x] Carregar `YOUTUBE_STREAM_KEY` do `.env` como fallback no `loadState()`
+- [x] Confirmar handler `config:stream_key` não faz broadcast da chave
+- [x] Adicionar guard em `media:start_stream` para verificar streamKey
+- [x] Verificar: chave não aparece em nenhum log
+- [x] Verificar: `.env` com `YOUTUBE_STREAM_KEY` pré-popula o estado
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- Modificado `server.ts` colocando `dotenv/config` e incluindo o guard de segurança `stream_key_missing` previnindo o broadcast e start do FFmpeg.
+- Refatorado levemente o state.ts adicionando a injeção do `.env` dentro da RAM, sem perturbar o cache de disco com JSONs sensíveis.
+
+### Completion Notes
+
+✅ Story 2.5 Integrada e segura.
+- Foi validada a regra de ouro que as keys nunca descem ao lado cliente, `server/broadcast.ts` explicitamente dropa da interface. 
+
+### File List
+- `server/server.ts` — modificado
+- `server/state.ts` — modificado
+
+### Change Log
+- 2026-06-11: Story 2.5 implementada — Proteção contra leakage de stream keys e fallback de env adicionados.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

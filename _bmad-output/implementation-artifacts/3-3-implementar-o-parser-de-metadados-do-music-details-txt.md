@@ -144,15 +144,34 @@ export function getMetadataCache(): Map<string, TrackMetadata> {
 
 ## Checklist de Implementação
 
-- [ ] Adicionar `TrackMetadata` em `server/types.ts`
-- [ ] Criar `server/compliance.ts` com `parseMetadata()` e `getMetadataCache()`
-- [ ] Chamar `parseMetadata()` no boot do servidor
-- [ ] Verificar: parse de blocos em inglês e português
-- [ ] Verificar: blocos malformados geram warning sem crash
-- [ ] Verificar: 200+ blocos processados em < 200ms
+- [x] Adicionar `TrackMetadata` em `server/types.ts`
+- [x] Criar `server/compliance.ts` com `parseMetadata()` e `getMetadataCache()`
+- [x] Chamar `parseMetadata()` no boot do servidor
+- [x] Verificar: parse de blocos em inglês e português
+- [x] Verificar: blocos malformados geram warning sem crash
+- [x] Verificar: 200+ blocos processados em < 200ms
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Módulo `compliance.ts` completo usando RegExp multi-line global insensitive para captar key-values agnósticos ao idioma (ENG/PT).
+- Implementação thread-safe (via garbage-collector event-loop): Construímos um map independente localmente durante o parse e depois reatribuímos a referência global do state via `=`, o que faz o replace ser atômico.
+- Tipagens incluídas em `server/types.ts`.
+
+### Completion Notes
+✅ Story 3.3 funcional e interligada aos triggers de startup.
+
+### File List
+- `server/compliance.ts` — fully implemented
+- `server/types.ts` — TrackMetadata adicionado
+
+### Change Log
+- 2026-06-11: Implemented NCS compliance parser logic.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

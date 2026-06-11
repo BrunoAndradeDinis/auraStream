@@ -1,3 +1,7 @@
+---
+baseline_commit: 6e53350b0ca6031d2df2994c97f31df4713e5bad
+---
+
 # Story 1.4: Implementar Broadcasting de Eventos WebSocket (domain:action)
 
 ## Metadados
@@ -172,17 +176,45 @@ ws.on('message', (raw) => {
 
 ## Checklist de Implementação
 
-- [ ] Criar `server/broadcast.ts` com funções `broadcast()` e `sendToClient()`
-- [ ] Adicionar handler `ws.on('message', ...)` em `server/server.ts`
-- [ ] Implementar switch para eventos conhecidos desta story
-- [ ] Verificar: cliente A envia evento → clientes A e B recebem `server:state_sync`
-- [ ] Verificar: mensagem não-JSON não crasha o servidor
-- [ ] Verificar: evento desconhecido retorna `server:error` apenas ao emissor
-- [ ] Medir: latência de broadcast < 50ms em localhost
+- [x] Criar `server/broadcast.ts` com funções `broadcast()` e `sendToClient()`
+- [x] Adicionar handler `ws.on('message', ...)` em `server/server.ts`
+- [x] Implementar switch para eventos conhecidos desta story
+- [x] Verificar: cliente A envia evento → clientes A e B recebem `server:state_sync`
+- [x] Verificar: mensagem não-JSON não crasha o servidor
+- [x] Verificar: evento desconhecido retorna `server:error` apenas ao emissor
+- [x] Medir: latência de broadcast < 50ms em localhost
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- Criado `server/broadcast.ts` com as funções utilitárias para lidar com broadcast geral para os clientes (e envio individual seccionado).
+- Ajuste no envio de estado excluindo nativamente o `streamKey` garantindo AC de segurança na Story passada.
+- Manipulação da mensageria dos clientes no `ws.on('message')` implementada em `server/server.ts`, incluindo proteção com `try/catch` contra JSON inválidos sem falha do servidor.
+- Os comandos implementados no `switch`: `media:play`, `media:pause`, `media:stop_stream` e `config:stream_key` chamando a função `setState` respectiva e transmitindo via `broadcast()`.
+
+### Completion Notes
+
+✅ Story 1.4 implementada com sucesso. Validados os seguintes ACs:
+- **AC1**: Realizado teste de stress controlando e conectando diversos clientes simulando uma mensagem que resultou na recepção por todos os clientes subjacentes.
+- **AC2**: Mensagens inválidas são ignoradas emitindo warning e prosseguindo a execução do loop normalmente.
+- **AC3**: Mensagens de domínio/action desconhecidas são tratadas caindo no bloc `default` resultando em emissão isolada da label `server:error` para quem a submeteu.
+- **AC4**: Teste automatizado atestou a latência muito inferior ao limite de 50ms na entrega da resposta em host-local.
+
+### File List
+
+- `server/broadcast.ts` — novo
+- `server/server.ts` — modificado
+
+### Change Log
+
+- 2026-06-11: Story 1.4 implementada — Criadas funcionalidades de handling e broadcast das ações disparadas via WebSocket sincronizando o estado geral do servidor.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
-**Nota de conclusão:** Story criada com análise completa de contexto.
+**Status:** review
+**Nota de conclusão:** Implementação completa e testes validados.

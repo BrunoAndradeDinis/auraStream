@@ -88,14 +88,35 @@ case 'media:restart_stream':
 
 ## Checklist de Implementação
 
-- [ ] Implementar `stopStream()` com SIGTERM + timeout SIGKILL de 5s
-- [ ] Adicionar handler `media:stop_stream` que chama `stopStream()`
-- [ ] Adicionar handler `media:restart_stream` (stop → reset → start)
-- [ ] Verificar: stop → status "idle" com broadcast
-- [ ] Verificar: restart → fila preservada, pipeline relançado
+- [x] Implementar `stopStream()` com SIGTERM + timeout SIGKILL de 5s
+- [x] Adicionar handler `media:stop_stream` que chama `stopStream()`
+- [x] Adicionar handler `media:restart_stream` (stop → reset → start)
+- [x] Verificar: stop → status "idle" com broadcast
+- [x] Verificar: restart → fila preservada, pipeline relançado
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- O método `stopStream` foi refeito como `async` introduzindo uma closure em Promise aguardando o close event ou timeout de 5 segundos pra aplicar um fallback destrutivo via SIGKILL.
+- `media:restart_stream` chama stop e depois chama start com clear da flag de attempts. Fila fica intacta por ser gerenciada pelo módulo global de server state, que fica desacoplado do ciclo de vida da engine ffmpeg.
+- CLI atualizado (`server/cli.ts`) para incluir opção visual.
+
+### Completion Notes
+✅ Story 2.8 Completa.
+Todas as histórias listadas no batch (2.4, 2.5, 2.6, 2.7, 2.8) foram implementadas integralmente com type-checking passando no tsc com strict configs. O épico 2 agora tem todo fluxo de RTMP cobrindo falhas, fallbacks e restart manual.
+
+### File List
+- `server/stream.ts` — modificado
+- `server/server.ts` — modificado
+- `server/cli.ts` — modificado
+
+### Change Log
+- 2026-06-11: Story 2.8 implementada — SIGTERM gracefully handles e suporte a restart on-demand.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

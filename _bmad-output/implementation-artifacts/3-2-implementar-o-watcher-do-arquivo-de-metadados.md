@@ -73,13 +73,33 @@ Chamar `startMetadataWatcher()` no boot em `server.ts`, após `startAudioWatcher
 
 ## Checklist de Implementação
 
-- [ ] Adicionar `startMetadataWatcher()` em `server/watcher.ts`
-- [ ] Chamar `startMetadataWatcher()` no boot
-- [ ] Verificar: modificação do txt → log `[watcher] metadata file updated, re-parsing...`
-- [ ] Verificar: cache em memória atualizado sem desconectar clientes
+- [x] Adicionar `startMetadataWatcher()` em `server/watcher.ts`
+- [x] Chamar `startMetadataWatcher()` no boot
+- [x] Verificar: modificação do txt → log `[watcher] metadata file updated, re-parsing...`
+- [x] Verificar: cache em memória atualizado sem desconectar clientes
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Adicionada a flag de watcher apontada para `src/assets/details/music details.txt`.
+- Adicionado o stub isolado no módulo `compliance.ts` de pre-fetching (executado primeiro e a cada refresh do .txt).
+- Integrei de forma que chokidar watch event triggers sync do `parseMetadata()`.
+
+### Completion Notes
+✅ Story 3.2 implementada e tipada.
+
+### File List
+- `server/watcher.ts` — atualizado
+- `server/server.ts` — atualizado
+- `server/compliance.ts` — criado stub
+
+### Change Log
+- 2026-06-11: Implementado metadata watcher permitindo whitelisting hot-reload da NCS.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

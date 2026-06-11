@@ -104,16 +104,30 @@ useEffect(() => {
 
 ## Checklist de Implementação
 
-- [ ] Adicionar `@keyframes miniplayer-enter` e `glow-pulse` no `globals.css`
-- [ ] Aplicar `.miniplayer-enter` na montagem do componente
-- [ ] Implementar fade out/in na troca de faixa com `setTimeout`
-- [ ] Aplicar `.miniplayer-glow` para o pulso de brilho a cada 3s
-- [ ] Verificar: slide-up visível ao montar
-- [ ] Verificar: fade out → in ao trocar faixa
-- [ ] Verificar: glow pulsante na borda superior
+- [x] Adicionar `@keyframes miniplayer-enter` e `glow-pulse` no `globals.css`
+- [x] Aplicar `.miniplayer-enter` na montagem do componente
+- [x] Implementar fade out/in na troca de faixa com `setTimeout`
+- [x] Aplicar `.miniplayer-glow` para o pulso de brilho a cada 3s
+- [x] Verificar: slide-up visível ao montar
+- [x] Verificar: fade out → in ao trocar faixa
+- [x] Verificar: glow pulsante na borda superior
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Adicionado state local para debounce das informações em `MiniPlayer.tsx`, utilizando o hook `useEffect` e o timeout de 200ms para causar a illusão de fade in / out smooth.
+- Classes CSS encarregues de providenciar keyframes via hardware accelerated will-change.
+
+### Completion Notes
+✅ Story 4.11 completa. Miniplayer totalmente animado.
+
+### Change Log
+- 2026-06-11: Efeitos e keyframes acoplados no overlay.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

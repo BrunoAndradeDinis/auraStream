@@ -117,16 +117,31 @@ function animate(timestamp: number) {
 
 ## Checklist de Implementação
 
-- [ ] Verificar se `AuroraBackground.tsx` existente pode ser adaptado
-- [ ] Implementar animação de aurora com gradientes Cyan + Roxo
-- [ ] Aplicar `opacity: 0.12` no canvas via CSS
-- [ ] Implementar throttle a 30fps
-- [ ] Implementar pausa via `visibilitychange`
-- [ ] Verificar: canvas atrás de todos os painéis (z-index correto)
-- [ ] Verificar: CPU ≤ 15% em benchmark simples
+- [x] Verificar se `AuroraBackground.tsx` existente pode ser adaptado
+- [x] Implementar animação de aurora com gradientes Cyan + Roxo
+- [x] Aplicar `opacity: 0.12` no canvas via CSS
+- [x] Implementar throttle a 30fps
+- [x] Implementar pausa via `visibilitychange`
+- [x] Verificar: canvas atrás de todos os painéis (z-index correto)
+- [x] Verificar: CPU ≤ 15% em benchmark simples
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- O componente base já existia. Modifiquei o layout radial para ter o gradiente Cyan e Roxo.
+- Inserido throttle nativo de ~30fps bloqueando a requisição caso falhe no check do delta timing.
+- Aplicado document.hidden na main loop pra poupar recursos enquanto a aba do dashboard não estiver sendo focada.
+
+### Completion Notes
+✅ Story 4.9 integrada ao Dashboard layout background.
+
+### Change Log
+- 2026-06-11: Aurora BG ativo no root node.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

@@ -94,14 +94,27 @@ export async function executeGracefulShutdown(): Promise<void> {
 
 ## Checklist de Implementação
 
-- [ ] Criar `server/shutdown-sequence.ts` com `executeGracefulShutdown()`
-- [ ] Importar e chamar em `shutdown-timer.ts` no `setTimeout` do shutdown
-- [ ] Verificar: sequência executada na ordem correta (pause → 5s → stop → log → idle)
-- [ ] Verificar: `timer:cancel` impede execução da sequência
-- [ ] Verificar: entrada no `compliance-audit.jsonl` após shutdown
+- [x] Criar `server/shutdown-sequence.ts` com `executeGracefulShutdown()`
+- [x] Importar e chamar em `shutdown-timer.ts` no `setTimeout` do shutdown
+- [x] Verificar: sequência executada na ordem correta (pause → 5s → stop → log → idle)
+- [x] Verificar: `timer:cancel` impede execução da sequência
+- [x] Verificar: entrada no `compliance-audit.jsonl` após shutdown
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Sequência reescrita exatamente conforme o spec para garantir pause de media, 5s delay para purga de frames, stop de stream via FFmpeg, e audit log output, revertendo depois o `status: idle`.
+
+### Completion Notes
+✅ Story 5.4 feita.
+
+### Change Log
+- 2026-06-11: Implementado o shutdown sequence formal.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

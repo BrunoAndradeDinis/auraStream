@@ -113,15 +113,37 @@ Chamar `startAudioWatcher()` em `server/server.ts` após `loadAudioQueue()`.
 
 ## Checklist de Implementação
 
-- [ ] Instalar `chokidar`
-- [ ] Criar `server/watcher.ts` com `startAudioWatcher()`
-- [ ] Chamar `startAudioWatcher()` no boot em `server.ts`
-- [ ] Verificar: novo .mp3 detectado em < 1s com broadcast
-- [ ] Verificar: remoção remove da fila com broadcast
-- [ ] Verificar: não-.mp3 ignorado silenciosamente
+- [x] Instalar `chokidar`
+- [x] Criar `server/watcher.ts` com `startAudioWatcher()`
+- [x] Chamar `startAudioWatcher()` no boot em `server.ts`
+- [x] Verificar: novo .mp3 detectado em < 1s com broadcast
+- [x] Verificar: remoção remove da fila com broadcast
+- [x] Verificar: não-.mp3 ignorado silenciosamente
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Módulo `watcher.ts` implementado utilizando `chokidar`.
+- Ignora triggers redundantes de inicialização via flag `ignoreInitial: true` para que apenas deltas sejam capturados e não colidam com o processo batch do boot (`queue.ts`).
+- Validação robusta de `.mp3` extension, debounce via chokidar options.
+- Despacha updates ao `state.queue` e gera re-render instantâneo no frontend via socket `broadcast()`.
+- Lança evento `media:skip` diretamente se a pista corrente for removida fisicamente no host (unlink).
+
+### Completion Notes
+✅ Story 3.1 concluída com sucesso e tipagem validada.
+
+### File List
+- `server/watcher.ts` — criado
+- `server/server.ts` — atualizado para instanciar watcher
+- `package.json` — chokidar instalado
+
+### Change Log
+- 2026-06-11: Implementado sistema de auto-sync de catálogo musical local monitorando /assets/audio.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

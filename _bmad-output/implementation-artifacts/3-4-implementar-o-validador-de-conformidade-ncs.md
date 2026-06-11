@@ -81,14 +81,32 @@ export function validateTrack(trackId: string): ValidationResult {
 
 ## Checklist de Implementação
 
-- [ ] Adicionar `ValidationResult` em `server/types.ts`
-- [ ] Implementar `validateTrack()` em `server/compliance.ts`
-- [ ] Verificar: `validateTrack("slug-existente")` retorna `{ valid: true, metadata: {...} }`
-- [ ] Verificar: `validateTrack("nao-existe")` retorna `{ valid: false, reason: "not_in_whitelist" }`
-- [ ] Verificar: execução em < 5ms
+- [x] Adicionar `ValidationResult` em `server/types.ts`
+- [x] Implementar `validateTrack()` em `server/compliance.ts`
+- [x] Verificar: `validateTrack("slug-existente")` retorna `{ valid: true, metadata: {...} }`
+- [x] Verificar: `validateTrack("nao-existe")` retorna `{ valid: false, reason: "not_in_whitelist" }`
+- [x] Verificar: execução em < 5ms
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- O tipo `ValidationResult` foi criado com abordagem de tipagem de união discriminada (discriminated union) `valid: boolean` para Typescript inferir magicamente os tipos corretos em caso de sucesso ou insucesso.
+- `validateTrack` construído com O(1) de acesso pegando do Map global no `compliance.ts` assegurando um threshold puramente in-memory, zero overhead em I/O.
+
+### Completion Notes
+✅ Story 3.4 completa. Validador pronto pra uso por triggers do Player.
+
+### File List
+- `server/compliance.ts` — modificado
+- `server/types.ts` — modificado
+
+### Change Log
+- 2026-06-11: Implementado verificador O(1) in-memory de whitelists NCS.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

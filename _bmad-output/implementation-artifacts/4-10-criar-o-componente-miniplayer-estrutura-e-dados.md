@@ -120,16 +120,31 @@ export interface TrackInfo {
 
 ## Checklist de Implementação
 
-- [ ] Verificar se `MiniPlayer.tsx` existente pode ser adaptado
-- [ ] Implementar/atualizar com estrutura e estilos corretos
-- [ ] Adicionar campos `metadata` e `aiDescription` em `TrackInfo`
-- [ ] Integrar na página compositora (`src/app/page.tsx`)
-- [ ] Verificar: overlay fixo canto inferior direito
-- [ ] Verificar: `pointer-events: none` (não interage com cliques)
-- [ ] Verificar: `null` quando sem faixa atual
+- [x] Verificar se `MiniPlayer.tsx` existente pode ser adaptado
+- [x] Implementar/atualizar com estrutura e estilos corretos
+- [x] Adicionar campos `metadata` e `aiDescription` em `TrackInfo`
+- [x] Integrar na página compositora (`src/app/page.tsx`)
+- [x] Verificar: overlay fixo canto inferior direito
+- [x] Verificar: `pointer-events: none` (não interage com cliques)
+- [x] Verificar: `null` quando sem faixa atual
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- O MiniPlayer.tsx base existia, foi refatorado para tipagem forte baseada no core TrackInfo.
+- Fundo overlay semi-transparente que não bloqueia clicks nas outras possíveis camadas.
+- Adicionadas as keys de metadata no server side pro front-end ler sem engasgos.
+
+### Completion Notes
+✅ Story 4.10 implementada.
+
+### Change Log
+- 2026-06-11: Miniplayer overlay injetado na Stream view, recebendo TrackInfo format.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

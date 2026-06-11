@@ -1,3 +1,7 @@
+---
+baseline_commit: 6e53350b0ca6031d2df2994c97f31df4713e5bad
+---
+
 # Story 1.2: Criar o Servidor WebSocket com Ciclo de Vida de Conexões
 
 ## Metadados
@@ -123,15 +127,42 @@ wss.on('connection', (ws: WebSocket) => {
 
 ## Checklist de Implementação
 
-- [ ] Substituir o placeholder `server/server.ts` pela implementação completa
-- [ ] Verificar: `npm run server` exibe `[server] WS listening on ws://localhost:9003`
-- [ ] Testar: conectar via `wscat` ou script simples e verificar logs de `connected`/`disconnected`
-- [ ] Verificar: processo não crasha após desconexão de cliente
-- [ ] Exportar `clients` e `wss` para uso nas próximas stories
+- [x] Substituir o placeholder `server/server.ts` pela implementação completa
+- [x] Verificar: `npm run server` exibe `[server] WS listening on ws://localhost:9003`
+- [x] Testar: conectar via `wscat` ou script simples e verificar logs de `connected`/`disconnected`
+- [x] Verificar: processo não crasha após desconexão de cliente
+- [x] Exportar `clients` e `wss` para uso nas próximas stories
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- Implementado o ciclo de vida do servidor WebSocket usando o pacote `ws`.
+- Configurado o servidor para iniciar na porta `9003`.
+- Adicionado controle de `clients` usando `Set<WebSocket>` e os logs exigidos para conexão, desconexão e erros.
+- A exportação de `clients` e `wss` foi feita adequadamente para ser usada nos próximos módulos (Story 1.4).
+
+### Completion Notes
+
+✅ Story 1.2 implementada com sucesso. Todos os ACs validados:
+- **AC1**: Servidor subiu com sucesso escutando a porta 9003 via `npm run server`.
+- **AC2**: Logs informando a conexão de clientes e o número atualizado foram gerados com sucesso através de teste via script `test-ws.js`.
+- **AC3**: Desconexões também atualizaram o total e servidor manteve-se executando de forma saudável.
+- **AC4**: Teste com clientes conectando e desconectando não afetou a execução do servidor, demonstrando estabilidade em múltiplos ciclos.
+
+### File List
+
+- `server/server.ts` — modificado
+
+### Change Log
+
+- 2026-06-11: Story 1.2 implementada — Implementado servidor WebSocket básico (ws://localhost:9003) para lidar com ciclos de vida das conexões dos clientes.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
-**Nota de conclusão:** Story criada com análise completa de contexto.
+**Status:** review
+**Nota de conclusão:** Implementação completa. Todos os ACs validados.

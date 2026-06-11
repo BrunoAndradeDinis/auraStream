@@ -105,14 +105,28 @@ Adicionar keyframe no `globals.css`:
 
 ## Checklist de Implementação
 
-- [ ] Criar `NowPlayingCard.tsx`
-- [ ] Adicionar `@keyframes waveform` no `globals.css`
-- [ ] Integrar na área central do Dashboard
-- [ ] Verificar: faixa atual exibida com borda Cyan e glow
-- [ ] Verificar: mensagem de fila vazia quando `currentTrack === null`
+- [x] Criar `NowPlayingCard.tsx`
+- [x] Adicionar `@keyframes waveform` no `globals.css`
+- [x] Integrar na área central do Dashboard
+- [x] Verificar: faixa atual exibida com borda Cyan e glow
+- [x] Verificar: mensagem de fila vazia quando `currentTrack === null`
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- O card `NowPlayingCard.tsx` foi criado isolando o rendering do destaque da faixa atual.
+- A animação `waveform` usa keyframes puros no CSS para gerar o efeito visual pulsante de audio no track rodando.
+
+### Completion Notes
+✅ Story 4.5 pronta, card adicionado no Dashboard grid.
+
+### Change Log
+- 2026-06-11: Seção Now Playing construída e acoplada.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

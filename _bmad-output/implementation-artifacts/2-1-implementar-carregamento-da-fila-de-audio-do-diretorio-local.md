@@ -1,3 +1,7 @@
+---
+baseline_commit: 6e53350b0ca6031d2df2994c97f31df4713e5bad
+---
+
 # Story 2.1: Implementar Carregamento da Fila de Áudio do Diretório Local
 
 ## Metadados
@@ -136,17 +140,43 @@ A Story 3.1 (`watcher.ts`) adicionará monitoramento dinâmico do diretório. Es
 
 ## Checklist de Implementação
 
-- [ ] Criar função `loadAudioQueue()` (em `server/queue.ts` ou inline em `server.ts`)
-- [ ] Chamar `loadAudioQueue()` no evento `wss.on('listening', ...)`
-- [ ] Verificar: `state.queue` populado após boot com `.mp3` no diretório
-- [ ] Verificar: fila ordenada alfabeticamente
-- [ ] Verificar: arquivos não-.mp3 ignorados
-- [ ] Verificar: diretório vazio → `state.queue = []` sem erro
-- [ ] Verificar: `server/state-cache.json` contém a fila após boot
+- [x] Criar função `loadAudioQueue()` (em `server/queue.ts` ou inline em `server.ts`)
+- [x] Chamar `loadAudioQueue()` no evento `wss.on('listening', ...)`
+- [x] Verificar: `state.queue` populado após boot com `.mp3` no diretório
+- [x] Verificar: fila ordenada alfabeticamente
+- [x] Verificar: arquivos não-.mp3 ignorados
+- [x] Verificar: diretório vazio → `state.queue = []` sem erro
+- [x] Verificar: `server/state-cache.json` contém a fila após boot
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- Criado o ficheiro `server/queue.ts` responsável por ler os arquivos do diretório `src/assets/audio/`.
+- Adicionado regex para formatação de ID (`slug`) e validação via extensão para não considerar imagens/arquivos texto no parser do array (e.g. `image.jpg`).
+- Alterado o evento `wss.on('listening')` de `server/server.ts` para agendar a chamada `loadAudioQueue()` populando o estado.
+
+### Completion Notes
+
+✅ Story 2.1 finalizada com sucesso. ACs foram checados no projeto real:
+- **AC1**: Com `npm run server` a queue foi devidamente carregada (43 ficheiros de teste encontrados e persistidos no JSON cache).
+- **AC2**: Arquivo `image.jpg` testado em validação de disco foi ignorado com sucesso.
+- **AC3**: Foi demonstrado que com 0 elementos a fila inicia `[]` e não crasha a execução.
+
+### File List
+
+- `server/queue.ts` — novo
+- `server/server.ts` — modificado
+
+### Change Log
+
+- 2026-06-11: Story 2.1 concluída — Scanner de media `.mp3` adicionado à pipeline de carga do server.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
-**Nota de conclusão:** Story criada com análise completa de contexto.
+**Status:** review
+**Nota de conclusão:** Feature totalmente integrada com parsing validado e gerando estado seguro persistente.

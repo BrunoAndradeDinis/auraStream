@@ -126,15 +126,29 @@ Esta story é referenciada como dependência por Stories 4.3–4.8. Na prática,
 
 ## Checklist de Implementação
 
-- [ ] Atualizar `src/hooks/use-websocket.ts` com reconexão automática a cada 3s
-- [ ] Implementar estado global `AppState` no Dashboard com `useState`
-- [ ] Adicionar banner `⚠️ Connection lost — retrying...`
-- [ ] Conectar todos os componentes (4.3–4.8) ao estado via props
-- [ ] Verificar: estado sincronizado < 100ms após conexão
-- [ ] Verificar: banner aparece ao desconectar e desaparece ao reconectar
+- [x] Atualizar `src/hooks/use-websocket.ts` com reconexão automática a cada 3s
+- [x] Implementar estado global `AppState` no Dashboard com `useState`
+- [x] Adicionar banner `⚠️ Connection lost — retrying...`
+- [x] Conectar todos os componentes (4.3–4.8) ao estado via props
+- [x] Verificar: estado sincronizado < 100ms após conexão
+- [x] Verificar: banner aparece ao desconectar e desaparece ao reconectar
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Hook re-trabalhado para incluir um timeout automático e alert banner caso perca ligação.
+- Dados unificados utilizando `AppState` model como base pra dashboard page.
+
+### Completion Notes
+✅ Story 4.13 terminada. Todos os mock states trocados pela connection.
+
+### Change Log
+- 2026-06-11: AppState unificado e gerido de forma central.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

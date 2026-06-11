@@ -101,13 +101,27 @@ E popular ao carregar a fila na Story 2.1 (ou nesta story, como melhoria).
 
 ## Checklist de Implementação
 
-- [ ] Criar `ComplianceWidget.tsx`
-- [ ] Adicionar campo `isVerified` em `TrackInfo` e popular no servidor
-- [ ] Integrar widget na sidebar ou área central do Dashboard
-- [ ] Verificar: estados corretos para verified/unverified/blocked com transições 300ms
+- [x] Criar `ComplianceWidget.tsx`
+- [x] Adicionar campo `isVerified` em `TrackInfo` e popular no servidor
+- [x] Integrar widget na sidebar ou área central do Dashboard
+- [x] Verificar: estados corretos para verified/unverified/blocked com transições 300ms
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- O tipo `TrackInfo` agora suporta tracking de verificação. O widget acusa estado amarelo quando encontra isVerified === false, servindo de gatekeeper visual no dashboard.
+- Componente linkado no painel central para garantir máxima visibilidade durante as operações de stream.
+
+### Completion Notes
+✅ Story 4.8 concluída com as definições de tipagem frontend/backend alinhadas para a propriedade isVerified.
+
+### Change Log
+- 2026-06-11: Dashboard acusa faixas suspeitas/unverifieds utilizando NCS styling guides.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

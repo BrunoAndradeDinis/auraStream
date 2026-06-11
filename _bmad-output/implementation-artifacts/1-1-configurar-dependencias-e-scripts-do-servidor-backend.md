@@ -1,3 +1,7 @@
+---
+baseline_commit: 6e53350b0ca6031d2df2994c97f31df4713e5bad
+---
+
 # Story 1.1: Configurar Dependências e Scripts do Servidor Backend
 
 ## Metadados
@@ -205,17 +209,17 @@ Esta story é **pré-requisito bloqueante** para todas as demais:
 
 ## Checklist de Implementação
 
-- [ ] Executar `npm install ws inquirer@8.2.6` (dependencies)
-- [ ] Executar `npm install -D ts-node @types/ws` (devDependencies)
-- [ ] Criar `tsconfig.server.json` na raiz do projeto
-- [ ] Adicionar scripts `"server"` e `"cli"` ao `package.json` (preservar scripts existentes)
-- [ ] Criar `/server/server.ts` placeholder
-- [ ] Criar `/server/cli.ts` placeholder
-- [ ] Verificar: `npm run server` executa sem erro
-- [ ] Verificar: `npm run cli` executa sem erro
-- [ ] Verificar: `npm run dev` ainda funciona na porta 9002 (sem regressão)
-- [ ] Verificar: `npm run typecheck` ainda passa (tsconfig raiz não foi modificado)
-- [ ] Adicionar `dist/` e `server/state-cache.json` ao `.gitignore`
+- [x] Executar `npm install ws inquirer@8.2.6` (dependencies)
+- [x] Executar `npm install -D ts-node @types/ws` (devDependencies)
+- [x] Criar `tsconfig.server.json` na raiz do projeto
+- [x] Adicionar scripts `"server"` e `"cli"` ao `package.json` (preservar scripts existentes)
+- [x] Criar `/server/server.ts` placeholder
+- [x] Criar `/server/cli.ts` placeholder
+- [x] Verificar: `npm run server` executa sem erro → `[server] starting...`
+- [x] Verificar: `npm run cli` executa sem erro → `[cli] starting...`
+- [x] Verificar: `npm run dev` ainda funciona na porta 9002 (sem regressão)
+- [x] Verificar: `npm run typecheck` — erros pré-existentes em `calendar.tsx` confirmados como baseline, sem novas regressões introduzidas
+- [x] Adicionar `dist/`, `server/state-cache.json` e `logs/compliance-audit.jsonl` ao `.gitignore`
 
 ---
 
@@ -229,7 +233,7 @@ O `inquirer@9+` adotou ESM puro (`"type": "module"`). Nosso backend usa `module:
 
 O projeto já usa `tsx` nos scripts do Genkit (`tsx src/ai/dev.ts`). No entanto, `tsx` é otimizado para ESM e o contexto Next.js. O `ts-node` com `tsconfig.server.json` explícito dá controle preciso sobre o módulo CJS necessário para o backend. Consistência arquitetural > uniformidade de ferramentas.
 
-### `.gitignore` — Entradas Recomendadas
+### `.gitignore` — Entradas Adicionadas
 
 ```
 # Backend build output
@@ -244,7 +248,40 @@ logs/compliance-audit.jsonl
 
 ---
 
+## Dev Agent Record
+
+### Implementation Notes
+
+- Dependências `ws@^8.21.0` e `inquirer@^8.2.6` instaladas em `dependencies`.
+- `ts-node@^10.9.2` e `@types/ws@^8.18.1` instaladas em `devDependencies`.
+- `tsconfig.server.json` criado na raiz — completamente isolado do `tsconfig.json` do Next.js (sem `extends`, sem `jsx`, sem plugin `next`).
+- Scripts `server` e `cli` adicionados ao `package.json` preservando todos os scripts existentes.
+- Arquivos placeholder `/server/server.ts` e `/server/cli.ts` criados para validação dos scripts.
+- Erros pré-existentes em `src/components/ui/calendar.tsx` (react-day-picker API change) confirmados como baseline via `git stash` — nenhuma regressão introduzida por esta story.
+
+### Completion Notes
+
+✅ Story 1.1 implementada com sucesso. Todos os 4 ACs validados:
+- **AC1**: `npm install` executa sem erros de conflito
+- **AC2**: Scripts `server` e `cli` presentes no `package.json`, script `dev` inalterado
+- **AC3**: `tsconfig.server.json` com `module: commonjs`, `include: ["server/**/*.ts"]`, sem configurações Next.js
+- **AC4**: `npm run server` e `npm run cli` executam sem `EADDRINUSE` (nenhuma porta aberta nos placeholders)
+
+### File List
+
+- `package.json` — adicionados scripts `server` e `cli`
+- `tsconfig.server.json` — novo arquivo (backend TS config)
+- `server/server.ts` — novo arquivo (placeholder)
+- `server/cli.ts` — novo arquivo (placeholder)
+- `.gitignore` — adicionadas entradas para `dist/`, `server/state-cache.json`, `logs/compliance-audit.jsonl`
+
+### Change Log
+
+- 2026-06-11: Story 1.1 implementada — fundação do backend configurada (dependências, tsconfig, scripts, placeholders, .gitignore)
+
+---
+
 ## Status
 
-**Status:** ready-for-dev
-**Nota de conclusão:** Story criada com análise completa de contexto — guia de implementação definitivo gerado.
+**Status:** review
+**Nota de conclusão:** Implementação completa. Todos os ACs validados. Sem regressões no frontend.

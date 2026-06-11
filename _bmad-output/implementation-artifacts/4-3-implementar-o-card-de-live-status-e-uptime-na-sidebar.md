@@ -114,15 +114,30 @@ Adicionar keyframe no `globals.css`:
 
 ## Checklist de Implementação
 
-- [ ] Criar `src/components/streaming/LiveStatusCard.tsx`
-- [ ] Adicionar `@keyframes pulse-dot` no `globals.css`
-- [ ] Integrar `LiveStatusCard` na `Sidebar` do Dashboard
-- [ ] Verificar: ponto verde pulsante quando status = "streaming"
-- [ ] Verificar: contador HH:MM:SS incrementando em tempo real
-- [ ] Verificar: transições de estado sem flash
+- [x] Criar `src/components/streaming/LiveStatusCard.tsx`
+- [x] Adicionar `@keyframes pulse-dot` no `globals.css`
+- [x] Integrar `LiveStatusCard` na `Sidebar` do Dashboard
+- [x] Verificar: ponto verde pulsante quando status = "streaming"
+- [x] Verificar: contador HH:MM:SS incrementando em tempo real
+- [x] Verificar: transições de estado sem flash
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- O componente LiveStatusCard renderiza a indicação clara e usa local timer pra update UI.
+- Criada a interface StreamStatus em src/types/shared.ts para compartilhar com o frontend.
+- O CSS pulse foi acoplado globalmente no globals.css e renderizado pelo className do LiveStatusCard.
+
+### Completion Notes
+✅ Story 4.3 concluída e linkada na Sidebar.
+
+### Change Log
+- 2026-06-11: Uptime ticker and status config maps included.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

@@ -1,11 +1,12 @@
 "use client"
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AuroraBackground } from '@/components/streaming/AuroraBackground';
 import { MiniPlayer } from '@/components/streaming/MiniPlayer';
-import { Dashboard } from '@/components/streaming/Dashboard';
 import { generateCreativeTrackDescription } from '@/ai/flows/generate-creative-track-description';
 import { useToast } from '@/hooks/use-toast';
+import { useAudioEngine } from '@/hooks/use-audio-engine';
+import { useWebSocket } from '@/hooks/use-websocket';
 
 interface Track {
   id: string;
@@ -13,67 +14,125 @@ interface Track {
   artist: string;
   genre: string;
   description: string;
+  filename?: string;
 }
 
-const INITIAL_TRACKS: Track[] = [
-  {
-    id: '1',
-    title: 'Neon Dreams',
-    artist: 'Synthetix',
-    genre: 'Synthwave',
-    description: 'A pulsing journey through a futuristic cityscape, wrapped in neon lights.'
-  },
-  {
-    id: '2',
-    title: 'Midnight Echo',
-    artist: 'Luna Vibe',
-    genre: 'Lo-fi',
-    description: 'Chill rhythms that drift like smoke through a midnight sky.'
-  },
-  {
-    id: '3',
-    title: 'Cyber Pulse',
-    artist: 'Glitch Mode',
-    genre: 'Techno',
-    description: 'Intense rhythmic exploration of binary worlds and digital heartbeats.'
-  },
-  {
-    id: '4',
-    title: 'Solar Winds',
-    artist: 'Cosmo Kid',
-    genre: 'Ambient',
-    description: 'Ethereal soundscapes that echo the vastness of the outer reaches.'
-  }
-];
-
 export default function AuraStream() {
-  const [tracks, setTracks] = useState<Track[]>(INITIAL_TRACKS);
+  const [tracks, setTracks] = useState<Track[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isStreaming, setIsStreaming] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showOverlay, setShowOverlay] = useState(true);
   const { toast } = useToast();
 
-  const currentTrack = tracks[currentTrackIndex];
+  const [audioEnabled, setAudioEnabled] = useState(false);
+  const { init, loadAndPlay, crossfadeTo, pause, resume, setVolume } = useAudioEngine();
 
-  const handleNextTrack = useCallback(() => {
-    setCurrentTrackIndex((prev) => (prev + 1) % tracks.length);
-  }, [tracks.length]);
+  const currentTrack = tracks[currentTrackIndex] || {
+    id: '0', title: 'Loading...', artist: '', genre: '', description: ''
+  };
 
+  const advanceTrack = useCallback(async (isSkip = false) => {
+    if (tracks.length === 0) return;
+    
+    const nextIdx = (currentTrackIndex + 1) % tracks.length;
+    const nextTrack = tracks[nextIdx];
+    const isLooped = nextIdx === 0 && tracks.length > 1;
+    
+    setCurrentTrackIndex(nextIdx);
+    
+    const onEnd = () => advanceTrack(false);
+    
+    if (isSkip || isStreaming) {
+      crossfadeTo(`/api/audio/${encodeURIComponent(nextTrack.filename!)}`, onEnd).catch(() => {
+        // Ignorar se falhar ou enviar erro
+      });
+    }
+
+    // Usaremos ref para emitir quando a conexão WS estiver disponível
+    return { nextTrack, isLooped };
+  }, [tracks, currentTrackIndex, isStreaming, crossfadeTo]);
+
+  const sendRef = useRef<((event: string, payload?: any) => void) | null>(null);
+
+  const handleWebSocketMessage = useCallback(async (event: string, payload: any) => {
+    if (event === 'server:state_sync') {
+      const state = payload;
+      if (state.queue && state.queue.length > 0) {
+        const mappedTracks = state.queue.map((t: any) => ({
+          id: t.id,
+          title: t.filename.replace('.mp3', ''),
+          artist: 'Unknown',
+          genre: 'Unknown',
+          description: '',
+          filename: t.filename
+        }));
+        
+        setTracks((prev) => {
+          if (prev.length === 0) return mappedTracks;
+          return mappedTracks.map((mt: Track) => {
+            const existing = prev.find((p: Track) => p.id === mt.id);
+            return existing ? { ...mt, description: existing.description } : mt;
+          });
+        });
+
+        if (state.currentTrack) {
+          const idx = mappedTracks.findIndex((t: Track) => t.id === state.currentTrack.id);
+          if (idx !== -1 && idx !== currentTrackIndex) setCurrentTrackIndex(idx);
+        }
+      }
+
+      const newIsStreaming = state.status === 'streaming';
+      setIsStreaming(newIsStreaming);
+
+      if (audioEnabled) {
+        if (newIsStreaming) {
+          resume();
+        } else if (state.status === 'paused') {
+          pause();
+        }
+      }
+    } else if (event === 'media:play' && audioEnabled) {
+      resume();
+    } else if (event === 'media:pause' && audioEnabled) {
+      pause();
+    } else if (event === 'media:skip' && audioEnabled) {
+      const res = await advanceTrack(true);
+      if (res && sendRef.current) {
+        sendRef.current('player:track_changed', { trackId: res.nextTrack.id });
+        if (res.isLooped) sendRef.current('player:queue_looped', {});
+      }
+    } else if (event === 'media:volume' && audioEnabled) {
+      const vol = Math.max(0, Math.min(1, Number(payload)));
+      setVolume(vol);
+    }
+  }, [audioEnabled, pause, resume, advanceTrack, currentTrackIndex, setVolume]);
+
+  const { send } = useWebSocket(handleWebSocketMessage);
+  useEffect(() => { sendRef.current = send; }, [send]);
+
+  const currentlyPlayingRef = useRef<string | null>(null);
+  
   useEffect(() => {
-    if (!isStreaming) return;
-
-    // Simulate track rotation every 30 seconds
-    const interval = setInterval(() => {
-      setShowOverlay(false);
-      setTimeout(() => {
-        handleNextTrack();
-        setShowOverlay(true);
-      }, 1000);
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [isStreaming, handleNextTrack]);
+    if (audioEnabled && tracks.length > 0) {
+      const track = tracks[currentTrackIndex];
+      if (track && track.filename && currentlyPlayingRef.current !== track.filename) {
+        currentlyPlayingRef.current = track.filename;
+        const onEnd = async () => {
+          const res = await advanceTrack(false);
+          if (res) {
+             send('player:track_changed', { trackId: res.nextTrack.id });
+             if (res.isLooped) send('player:queue_looped', {});
+          }
+        };
+        
+        // Initial load
+        loadAndPlay(`/api/audio/${encodeURIComponent(track.filename)}`, onEnd).catch(() => {
+          send('player:error', 'decode_failed');
+        });
+      }
+    }
+  }, [audioEnabled, tracks, currentTrackIndex, loadAndPlay, advanceTrack, send]);
 
   const handleGenerateDescription = async (track: Track) => {
     setIsGenerating(true);
@@ -106,64 +165,53 @@ export default function AuraStream() {
   };
 
   const toggleStream = () => {
-    setIsStreaming(!isStreaming);
     if (!isStreaming) {
-      toast({
-        title: "Stream Started",
-        description: "AuraStream is now pushing to the RTMP bridge."
-      });
+      send('media:start_stream');
     } else {
-      toast({
-        title: "Stream Stopped",
-        description: "Feed has been disconnected."
-      });
+      send('media:stop_stream');
     }
   };
+
+  useEffect(() => {
+    if (!audioEnabled) {
+      init();
+      setAudioEnabled(true);
+    }
+  }, [audioEnabled, init]);
 
   return (
     <main className="relative min-h-screen w-full flex overflow-hidden font-body">
       {/* Background Engine */}
       <AuroraBackground />
-      
-      {/* Management Layer (Admin Panel) */}
-      <Dashboard 
-        tracks={tracks}
-        currentTrackId={currentTrack.id}
-        isStreaming={isStreaming}
-        onToggleStream={toggleStream}
-        onSelectTrack={(id) => {
-          const idx = tracks.findIndex(t => t.id === id);
-          if (idx !== -1) {
-            setShowOverlay(false);
-            setTimeout(() => {
-              setCurrentTrackIndex(idx);
-              setShowOverlay(true);
-            }, 500);
-          }
-        }}
-        onGenerateDescription={handleGenerateDescription}
-        isGenerating={isGenerating}
-      />
 
       {/* Live Feed View (The part that actually gets captured) */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative pointer-events-none">
         {/* Stream Info Indicator (Top Left) */}
         <div className="absolute top-8 left-8 flex items-center gap-4 animate-fade-in-up">
            <div className="flex flex-col">
               <span className="text-white font-headline font-bold text-lg tracking-tighter">AuraStream HD</span>
               <div className="flex items-center gap-2">
-                <span className="flex h-1.5 w-1.5 rounded-full bg-primary" />
-                <span className="text-[10px] text-primary font-bold uppercase tracking-widest">Live Pipeline Active</span>
+                <span className={`flex h-1.5 w-1.5 rounded-full ${isStreaming ? 'bg-primary' : 'bg-gray-500'}`} />
+                <span className={`text-[10px] font-bold uppercase tracking-widest ${isStreaming ? 'text-primary' : 'text-gray-500'}`}>
+                  {isStreaming ? 'Live Pipeline Active' : 'Pipeline Idle'}
+                </span>
               </div>
            </div>
         </div>
 
         {/* The Visual Miniplayer Overlay */}
         <MiniPlayer 
-          trackTitle={currentTrack.title}
-          artist={currentTrack.artist}
-          description={currentTrack.description}
-          isVisible={showOverlay}
+          currentTrack={{
+            id: 'mock-1',
+            filename: currentTrack.title + '.mp3',
+            path: '',
+            metadata: {
+              artist: currentTrack.artist,
+              genre: 'Electronic',
+              source: 'NCS'
+            },
+            aiDescription: currentTrack.description
+          }} 
         />
 
         {/* Subtle Watermark */}

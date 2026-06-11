@@ -24,6 +24,17 @@
     --input: 225 5% 18%;
     --ring: 350 80% 55%;
     --radius: 0.75rem;
+
+    /* Abyssal Aurora Design System */
+    --color-bg: #000000;
+    --color-surface: #020617;
+    --color-primary: #00F0FF;
+    --color-secondary: #7C3AED;
+    --color-text: #FFFFFF;
+    --color-muted: #94A3B8;
+    --color-border: rgba(0, 240, 255, 0.15);
+    --rounded-large: 16px;
+    --padding-comfortable: 24px;
   }
 }
 
@@ -32,7 +43,8 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--color-bg);
+    color: var(--color-text);
   }
 }
 
@@ -44,4 +56,86 @@
   background: rgba(20, 16, 17, 0.7);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(235, 46, 78, 0.2);
+}
+
+.font-mono {
+  font-family: var(--font-mono), 'JetBrains Mono', monospace;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.pulse { animation: pulse-dot 1.5s ease-in-out infinite; }
+
+.glass-card {
+  background: rgba(2, 6, 23, 0.70);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  border-radius: 16px;
+  padding: var(--padding-comfortable, 24px);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: var(--font-outfit), 'Outfit', sans-serif;
+  font-weight: 600;
+  transition: background 200ms ease-in-out, transform 100ms ease-out;
+}
+
+.btn-primary:hover {
+  background: rgba(0, 240, 255, 0.8);
+}
+
+.btn-primary:active {
+  transform: scale(0.96);
+  transition: transform 100ms ease-out;
+}
+
+.btn-secondary {
+  background: rgba(124, 58, 237, 0.2);
+  color: var(--color-secondary);
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 200ms ease-in-out, transform 100ms ease-out;
+}
+
+.btn-secondary:hover {
+  background: rgba(124, 58, 237, 0.35);
+}
+
+.btn-secondary:active {
+  transform: scale(0.96);
+}
+
+@keyframes waveform {
+  from { transform: scaleY(0.3); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes miniplayer-enter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 -2px 8px rgba(124, 58, 237, 0.4); }
+  50% { box-shadow: 0 -2px 20px rgba(124, 58, 237, 0.9); }
+}
+
+.miniplayer-enter {
+  animation: miniplayer-enter 300ms ease-out forwards;
+  will-change: transform, opacity;
+}
+
+.miniplayer-glow {
+  animation: glow-pulse 3s ease-in-out infinite;
 }

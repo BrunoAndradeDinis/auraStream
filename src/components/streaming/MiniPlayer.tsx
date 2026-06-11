@@ -1,63 +1,69 @@
-"use client"
-
-import React from 'react';
-import { Music, Radio } from 'lucide-react';
-import { cn } from '@/lib/utils';
+'use client';
+import { useState, useEffect } from 'react';
+import { TrackInfo } from '@/types/shared';
 
 interface MiniPlayerProps {
-  trackTitle: string;
-  artist: string;
-  description: string;
-  isVisible: boolean;
+  currentTrack: TrackInfo | null;
 }
 
-export const MiniPlayer: React.FC<MiniPlayerProps> = ({ 
-  trackTitle, 
-  artist, 
-  description,
-  isVisible 
-}) => {
+export function MiniPlayer({ currentTrack }: MiniPlayerProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [displayTrack, setDisplayTrack] = useState<TrackInfo | null>(currentTrack);
+
+  useEffect(() => {
+    if (!currentTrack) {
+      setIsVisible(false);
+      setTimeout(() => setDisplayTrack(null), 200);
+      return;
+    }
+    
+    // Fade out
+    setIsVisible(false);
+    const timer = setTimeout(() => {
+      setDisplayTrack(currentTrack);
+      setIsVisible(true); // Fade in
+    }, 200);
+    
+    return () => clearTimeout(timer);
+  }, [currentTrack]); // O currentTrack.id seria melhor se houvesse a garantia de id. Mas currentTrack também serve pois no page ele é atualizado quando muda.
+
+  if (!displayTrack) return null;
+
   return (
-    <div className={cn(
-      "fixed bottom-8 right-8 w-96 miniplayer-glass rounded-xl p-5 shadow-2xl transition-all duration-700 transform",
-      isVisible ? "translate-x-0 opacity-100 scale-100" : "translate-x-12 opacity-0 scale-95 pointer-events-none"
-    )}>
-      <div className="flex items-start gap-4">
-        <div className="bg-primary/20 p-3 rounded-lg border border-primary/30">
-          <Music className="w-6 h-6 text-primary animate-pulse" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="flex h-2 w-2 rounded-full bg-primary animate-ping" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-primary/80 font-headline">Now Playing</span>
-          </div>
-          <h2 className="text-xl font-headline font-bold text-white truncate leading-tight">
-            {trackTitle}
-          </h2>
-          <p className="text-accent text-sm font-medium mb-3">
-            {artist}
-          </p>
-          <div className="h-px w-full bg-gradient-to-r from-primary/30 to-transparent mb-3" />
-          <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2 italic font-body">
-            "{description}"
-          </p>
-        </div>
+    <div className={`miniplayer-glow ${isVisible ? 'miniplayer-enter' : 'opacity-0 scale-95 pointer-events-none'}`} style={{
+      position: 'fixed',
+      bottom: '20px',
+      right: '20px',
+      width: '280px',
+      height: '140px',
+      background: 'rgba(2, 6, 23, 0.85)',
+      backdropFilter: 'blur(8px)',
+      borderTop: '2px solid #7C3AED',
+      borderRadius: '8px',
+      padding: '12px 16px',
+      pointerEvents: 'none', // passivo
+      zIndex: 100,
+      overflow: 'hidden',
+      transition: 'opacity 200ms ease-out, transform 200ms ease-out',
+    }}>
+      <div style={{ fontFamily: 'var(--font-outfit)', fontWeight: 700, fontSize: '14px', color: '#FFFFFF', 
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        {displayTrack.filename.replace(/\.mp3$/i, '')}
       </div>
-      
-      <div className="mt-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex gap-0.5 items-end h-3">
-            <div className="w-1 bg-primary/60 rounded-full animate-[bounce_1s_infinite]" />
-            <div className="w-1 bg-primary rounded-full animate-[bounce_1.2s_infinite]" />
-            <div className="w-1 bg-primary/40 rounded-full animate-[bounce_0.8s_infinite]" />
-          </div>
-          <span className="text-[10px] text-muted-foreground font-mono">LIVE FEED ACTIVE</span>
-        </div>
-        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">
-          <Radio className="w-3 h-3 text-primary" />
-          <span className="text-[10px] font-bold text-primary font-headline">AURASTREAM HD</span>
-        </div>
+      <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        {displayTrack.metadata?.artist ?? 'Unknown Artist'}
       </div>
+      <div style={{ fontSize: '10px', color: '#7C3AED', marginTop: '2px' }}>
+        {displayTrack.metadata?.genre ?? ''}
+      </div>
+      {displayTrack.aiDescription && (
+        <div style={{
+          fontSize: '9px', fontStyle: 'italic', color: '#94A3B8', marginTop: '6px',
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>
+          {displayTrack.aiDescription}
+        </div>
+      )}
     </div>
   );
-};
+}

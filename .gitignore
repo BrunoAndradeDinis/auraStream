@@ -44,5 +44,12 @@ next-env.d.ts
 firebase-debug.log
 firestore-debug.log
 
-# medias
-src/assets/
+
+# Backend build output
+dist/
+
+# State persistence (gerado em runtime, não versionado)
+server/state-cache.json
+
+# Logs de auditoria (gerados em runtime)
+logs/compliance-audit.jsonl

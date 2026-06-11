@@ -1,3 +1,7 @@
+---
+baseline_commit: 6e53350b0ca6031d2df2994c97f31df4713e5bad
+---
+
 # Story 1.6: Criar o Menu Principal da CLI com Inquirer
 
 ## Metadados
@@ -140,16 +144,43 @@ showMenu().catch((err) => {
 
 ## Checklist de Implementação
 
-- [ ] Instalar `chalk@4.1.2` (`npm install chalk@4.1.2`)
-- [ ] Substituir placeholder `server/cli.ts` pela implementação completa
-- [ ] Verificar: `npm run cli` exibe o menu formatado com Cyan
-- [ ] Verificar: "Exit" encerra o processo sem erros
-- [ ] Verificar: outras opções exibem `[Connecting to server...]`
-- [ ] Verificar: menu retorna após ação (loop funcional)
+- [x] Instalar `chalk@4.1.2` (`npm install chalk@4.1.2`)
+- [x] Substituir placeholder `server/cli.ts` pela implementação completa
+- [x] Verificar: `npm run cli` exibe o menu formatado com Cyan
+- [x] Verificar: "Exit" encerra o processo sem erros
+- [x] Verificar: outras opções exibem `[Connecting to server...]`
+- [x] Verificar: menu retorna após ação (loop funcional)
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- Instalado o `chalk@4.1.2` (versão CJS) em compatibilidade com o formato do server (`tsconfig.server.json`).
+- Implementado o menu em `server/cli.ts` utilizando `inquirer` e opções estruturadas para interface interativa.
+- Estabelecidos placeholders que retornam ao loop do menu após o handle da ação.
+- Verificação de tipos (`tsc`) validou as chamadas e assinaturas dos métodos com sucesso.
+
+### Completion Notes
+
+✅ Story 1.6 implementada com sucesso. ACs previstos foram respeitados:
+- **AC1**: Estilizações integradas com `chalk.cyan` para todos os headers e itens de menu.
+- **AC2**: Bloco condicional para `action === 'exit'` chama o `process.exit(0)` de forma devida.
+- **AC3**: Bloco de placeholder printa corretamente "Connecting to server..." antes de despachar a ação (para Story 1.7).
+
+### File List
+
+- `server/cli.ts` — modificado
+- `package.json` — modificado (`chalk` adicionado)
+
+### Change Log
+
+- 2026-06-11: Story 1.6 implementada — Construído o motor do menu interativo CLI.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
-**Nota de conclusão:** Story criada com análise completa de contexto.
+**Status:** review
+**Nota de conclusão:** Implementação finalizada em sucesso e verificada.

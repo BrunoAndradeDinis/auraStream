@@ -109,15 +109,35 @@ function Sidebar() {
 
 ## Checklist de Implementação
 
-- [ ] Criar `src/app/dashboard/page.tsx`
-- [ ] Criar `src/components/streaming/Dashboard.tsx` com `DashboardLayout` e `Sidebar`
-- [ ] Verificar: `/dashboard` renderiza corretamente em localhost:9002
-- [ ] Verificar: sidebar fixa de 240px com fundo e borda corretos
-- [ ] Verificar: área central com scroll independente
-- [ ] Verificar: colapso de sidebar em viewport < 768px
+- [x] Criar `src/app/dashboard/page.tsx`
+- [x] Criar `src/components/streaming/Dashboard.tsx` com `DashboardLayout` e `Sidebar`
+- [x] Verificar: `/dashboard` renderiza corretamente em localhost:9002
+- [x] Verificar: sidebar fixa de 240px com fundo e borda corretos
+- [x] Verificar: área central com scroll independente
+- [x] Verificar: colapso de sidebar em viewport < 768px
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Desacoplei o Dashboard do stream view (`src/app/page.tsx`) e o remodelei para ser a root layout da rota `/dashboard`. O stream view agora será exclusivo para renderizar o Canvas pro Puppeteer (Epic 2) ficar limpo de UI admin.
+- O Layout base (`DashboardLayout`) providencia o grid contendo o scroll Y interno e o painel esquerdo.
+- Criada a página `dashboard/page.tsx` testando os tokens.
+
+### Completion Notes
+✅ Story 4.2 (Dashboard shell) concluída.
+
+### File List
+- `src/components/streaming/Dashboard.tsx` — overwritten
+- `src/app/page.tsx` — old dashboard overlay removed
+- `src/app/dashboard/page.tsx` — created
+
+### Change Log
+- 2026-06-11: Implementado layout flex principal para o operador do sistema com sidebar retrátil em mobile.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

@@ -113,14 +113,37 @@ export function stopStream(): void {
 
 ## Checklist de Implementação
 
-- [ ] Instalar `puppeteer` e `puppeteer-stream`
-- [ ] Criar `server/stream.ts` com `startStream()` e `stopStream()`
-- [ ] Adicionar handler `media:start_stream` no switch de eventos do servidor
-- [ ] Verificar: status atualiza para "streaming" com broadcast
-- [ ] Verificar: Stream Key não aparece nos logs
+- [x] Instalar `puppeteer` e `puppeteer-stream`
+- [x] Criar `server/stream.ts` com `startStream()` e `stopStream()`
+- [x] Adicionar handler `media:start_stream` no switch de eventos do servidor
+- [x] Verificar: status atualiza para "streaming" com broadcast
+- [x] Verificar: Stream Key não aparece nos logs
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- Modulo `server/stream.ts` criado usando `puppeteer@25` injetando diretamente o buffer do layout frontend Next.js no `pipe:0` do ffmpeg rodando x264/AAC.
+- `server.ts` integrado fazendo as chamadas correspondentes com verificação extra de safety guard assegurando `!state.streamKey`.
+- Adicionado `@ts-expect-error` isolado no wrapper do `getStream` de forma a mitigar descasamento de typings das interfaces nativas de pacotes puppeteer vs puppeteer-stream.
+
+### Completion Notes
+
+✅ Story 2.6 concluída com sucesso. Todo pipeline de rtmp headless implementado e compilado sem errors.
+- **AC1** Cumprido via `spawn('ffmpeg', ...)` acoplado à stream do puppeteer.
+- **AC2** Cumprido: URL string interpolada direto no spawn de child-process, nunca levada ao logger nativo.
+
+### File List
+- `server/stream.ts` — criado
+- `server/server.ts` — modificado
+
+### Change Log
+- 2026-06-11: Story 2.6 implementada — Captura de frontend em headless browser conectada ao transponder x264 FFmpeg.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

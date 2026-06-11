@@ -1,3 +1,7 @@
+---
+baseline_commit: 6e53350b0ca6031d2df2994c97f31df4713e5bad
+---
+
 # Story 1.3: Implementar State Store em Memória com Persistência JSON
 
 ## Metadados
@@ -167,17 +171,48 @@ E ao iniciar, garantir que o `state-cache.json` é criado se não existir (já c
 
 ## Checklist de Implementação
 
-- [ ] Criar `server/types.ts` com interfaces `TrackInfo`, `StreamStatus`, `AppState`
-- [ ] Criar `server/state.ts` com `state`, `setState`, lógica de load/persist
-- [ ] Integrar import de `state`/`setState` no `server/server.ts`
-- [ ] Verificar: primeira execução cria `server/state-cache.json` com estado padrão
-- [ ] Verificar: `streamKey` ausente do JSON gravado
-- [ ] Verificar: segunda execução carrega o cache e loga `[server] state loaded from cache`
-- [ ] Confirmar `server/state-cache.json` no `.gitignore`
+- [x] Criar `server/types.ts` com interfaces `TrackInfo`, `StreamStatus`, `AppState`
+- [x] Criar `server/state.ts` com `state`, `setState`, lógica de load/persist
+- [x] Integrar import de `state`/`setState` no `server/server.ts`
+- [x] Verificar: primeira execução cria `server/state-cache.json` com estado padrão
+- [x] Verificar: `streamKey` ausente do JSON gravado
+- [x] Verificar: segunda execução carrega o cache e loga `[server] state loaded from cache`
+- [x] Confirmar `server/state-cache.json` no `.gitignore`
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- Criado `server/types.ts` com as interfaces TypeScript.
+- Criado `server/state.ts` com uma implementação em memória (RAM) e persistência em `server/state-cache.json`.
+- Adicionado destructuring na função `persistStateAsync` para omitir `streamKey`.
+- O import de `state` e `setState` foi adicionado ao arquivo `server/server.ts`.
+- Validada a criação do arquivo, omissão da stream key e carregamento do cache através de scripts de teste automatizados.
+- Confirmado que `server/state-cache.json` já constava no `.gitignore` (adicionado na Story 1.1).
+
+### Completion Notes
+
+✅ Story 1.3 concluída com sucesso. Validados os seguintes ACs:
+- **AC1**: Criada a rotina de criação automatizada de `state-cache.json` caso não exista.
+- **AC2**: Carregamento comprovado na inicialização exibindo o log `[server] state loaded from cache`.
+- **AC3**: Função `setState` exposta suportando partial patches e realizando deep merge usando o spread operator.
+- **AC4**: Serialização segura excluindo ativamente a `streamKey` do JSON.
+
+### File List
+
+- `server/types.ts` — novo
+- `server/state.ts` — novo
+- `server/server.ts` — modificado
+
+### Change Log
+
+- 2026-06-11: Story 1.3 implementada — Criado sistema de gerenciamento de estado persistente e `state-cache.json` para o backend.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
-**Nota de conclusão:** Story criada com análise completa de contexto.
+**Status:** review
+**Nota de conclusão:** Implementação completa. Todos os ACs validados.

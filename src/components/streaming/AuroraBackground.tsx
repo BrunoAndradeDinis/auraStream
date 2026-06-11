@@ -13,7 +13,9 @@ export const AuroraBackground: React.FC = () => {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let time = 0;
+    let lastFrame = 0;
+    const FPS = 30;
+    const INTERVAL = 1000 / FPS;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -23,40 +25,56 @@ export const AuroraBackground: React.FC = () => {
     window.addEventListener('resize', resize);
     resize();
 
-    const render = () => {
-      time += 0.005;
+    const drawAurora = (t: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Onda Cyan (#00F0FF)
+      const gradCyan = ctx.createRadialGradient(
+        canvas.width * (0.3 + 0.1 * Math.sin(t * 0.0005)),
+        canvas.height * 0.4,
+        0,
+        canvas.width * 0.5, canvas.height * 0.5,
+        canvas.width * 0.6
+      );
+      gradCyan.addColorStop(0, 'rgba(0, 240, 255, 0.4)');
+      gradCyan.addColorStop(1, 'transparent');
+      
+      ctx.fillStyle = gradCyan;
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Create multiple layers of gradients
-      const drawLayer = (color: string, offsetX: number, offsetY: number, scale: number) => {
-        const gradient = ctx.createRadialGradient(
-          canvas.width / 2 + Math.sin(time + offsetX) * 300,
-          canvas.height / 2 + Math.cos(time + offsetY) * 200,
-          0,
-          canvas.width / 2 + Math.sin(time + offsetX) * 300,
-          canvas.height / 2 + Math.cos(time + offsetY) * 200,
-          canvas.width * scale
-        );
-
-        gradient.addColorStop(0, color);
-        gradient.addColorStop(1, 'transparent');
-
-        ctx.fillStyle = gradient;
-        ctx.globalCompositeOperation = 'screen';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      };
-
-      // Crimson (#EB2E4E)
-      drawLayer('rgba(235, 46, 78, 0.15)', 0, 0, 0.8);
-      // Orchid (#D629AD)
-      drawLayer('rgba(214, 41, 173, 0.1)', 2, 3, 1.2);
-      // Dark Accents
-      drawLayer('rgba(20, 16, 17, 0.4)', 1, 1, 0.5);
-
-      animationFrameId = requestAnimationFrame(render);
+      // Onda Roxo (#7C3AED)
+      const gradPurple = ctx.createRadialGradient(
+        canvas.width * (0.7 + 0.05 * Math.cos(t * 0.0007)),
+        canvas.height * 0.6,
+        0,
+        canvas.width * 0.5, canvas.height * 0.5,
+        canvas.width * 0.5
+      );
+      gradPurple.addColorStop(0, 'rgba(124, 58, 237, 0.4)');
+      gradPurple.addColorStop(1, 'transparent');
+      
+      ctx.fillStyle = gradPurple;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     };
 
-    render();
+    const animate = (timestamp: number) => {
+      if (document.hidden) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+      
+      if (timestamp - lastFrame < INTERVAL) {
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+      
+      lastFrame = timestamp;
+      drawAurora(timestamp);
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('resize', resize);
@@ -65,10 +83,22 @@ export const AuroraBackground: React.FC = () => {
   }, []);
 
   return (
-    <canvas 
-      ref={canvasRef} 
-      className="fixed inset-0 w-full h-full aurora-canvas bg-[#141011]"
-      style={{ zIndex: -1 }}
-    />
+    <>
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="fixed inset-0 w-full h-full object-cover pointer-events-none"
+        style={{ zIndex: 0 }}
+      >
+        <source src="/video-background.mp4" type="video/mp4" />
+      </video>
+      <canvas 
+        ref={canvasRef} 
+        className="fixed inset-0 w-full h-full aurora-canvas pointer-events-none mix-blend-screen"
+        style={{ zIndex: 1, opacity: 0.3 }}
+      />
+    </>
   );
 };

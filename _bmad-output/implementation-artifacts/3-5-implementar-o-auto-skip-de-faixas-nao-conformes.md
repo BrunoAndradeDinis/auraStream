@@ -91,13 +91,31 @@ function advanceToNextValidTrack(currentId: string): void {
 
 ## Checklist de Implementação
 
-- [ ] Implementar `advanceToNextValidTrack()` em `server/server.ts` ou módulo dedicado
-- [ ] Integrar no handler `player:track_changed` e no início do stream
-- [ ] Verificar: faixas inválidas puladas com broadcast `server:compliance_skip`
-- [ ] Verificar: todas inválidas → status `compliance_blocked`
+- [x] Implementar `advanceToNextValidTrack()` em `server/server.ts` ou módulo dedicado
+- [x] Integrar no handler `player:track_changed` e no início do stream
+- [x] Verificar: faixas inválidas puladas com broadcast `server:compliance_skip`
+- [x] Verificar: todas inválidas → status `compliance_blocked`
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Criada função local `advanceToNextValidTrack` em `server.ts` iterando de forma preemptiva caso o cliente requira pular a faixa (via interface/frontend) para algo inválido.
+- Se a faixa reportada pelo frontend (track_changed) for falha, o backend aborta o play, emite `server:compliance_skip` e reitera a fila autonomamente.
+- `compliance_blocked` fallback handler também embutido limitando as attempts por `queue.length`.
+
+### Completion Notes
+✅ Story 3.5 implementada de forma fluída e interceptando eventos diretos da engine.
+
+### File List
+- `server/server.ts` — modificado
+
+### Change Log
+- 2026-06-11: Implementado server-side guard loop to filter non-whitelist NCS playback.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

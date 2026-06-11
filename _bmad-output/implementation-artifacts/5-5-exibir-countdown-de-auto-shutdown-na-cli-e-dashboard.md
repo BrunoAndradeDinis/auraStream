@@ -92,15 +92,30 @@ case 'server:shutdown_warning':
 
 ## Checklist de Implementação
 
-- [ ] Adicionar exibição do countdown no `showMenu()` da CLI
-- [ ] Adicionar badge de countdown na Sidebar do Dashboard
-- [ ] Adicionar handler `server:shutdown_warning` → toast
-- [ ] Verificar: countdown atualiza a cada 1s no Dashboard
-- [ ] Verificar: badge/linha ocultos quando `shutdownAt === null`
-- [ ] Verificar: toast aparece ao receber `server:shutdown_warning`
+- [x] Adicionar exibição do countdown no `showMenu()` da CLI
+- [x] Adicionar badge de countdown na Sidebar do Dashboard
+- [x] Adicionar handler `server:shutdown_warning` → toast
+- [x] Verificar: countdown atualiza a cada 1s no Dashboard
+- [x] Verificar: badge/linha ocultos quando `shutdownAt === null`
+- [x] Verificar: toast aparece ao receber `server:shutdown_warning`
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Badge condicional de timer renderizado na Sidebar do `DashboardLayout`, sincronizado com o global `appState`.
+- Uso do hook `useToast` para pop-up automático quando os 5 minutos finais chegam.
+- O CLI puxa o estado (`sendCommand('queue:view')`) na invocação de render do menu para injectar a tag ⏱ Auto-shutdown restante se detetar a configuração ativa no servidor.
+
+### Completion Notes
+✅ Story 5.5 concluída. Epic 5 fechado com sucesso.
+
+### Change Log
+- 2026-06-11: UI de timers implementada na dashboard page e no CLI prompt wrapper.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

@@ -73,13 +73,27 @@ Verificar se `Inter` já está importada no projeto (o Shadcn/UI usa Inter por p
 
 ## Checklist de Implementação
 
-- [ ] Verificar campo `aiDescription` em `TrackInfo` (Story 4.10/5.1)
-- [ ] Adicionar renderização condicional em `MiniPlayer.tsx`
-- [ ] Verificar: descrição exibida em 9px italic #94A3B8 limitada a 2 linhas
-- [ ] Verificar: layout sem espaço vazio quando `aiDescription === null`
+- [x] Verificar campo `aiDescription` em `TrackInfo` (Story 4.10/5.1)
+- [x] Adicionar renderização condicional em `MiniPlayer.tsx`
+- [x] Verificar: descrição exibida em 9px italic #94A3B8 limitada a 2 linhas
+- [x] Verificar: layout sem espaço vazio quando `aiDescription === null`
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- O código do MiniPlayer já tinha sido condicionalmente adaptado na Story 4.10.
+- `aiDescription` é um node opcional no DOM que só consome layout vertical quando o texto existe de facto, garantindo que o spacing obedece às flex rules quando o campo não é recebido do back-end.
+
+### Completion Notes
+✅ Story 5.2 validada como já implementada.
+
+### Change Log
+- 2026-06-11: Confirmação de render condicional com WebkitLineClamp ativo em 2 linhas.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

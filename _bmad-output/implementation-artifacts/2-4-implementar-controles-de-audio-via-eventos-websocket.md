@@ -74,14 +74,37 @@ switch (event) {
 
 ## Checklist de Implementação
 
-- [ ] Handlers para `media:pause`, `media:play`, `media:skip`, `media:volume` no WebSocket listener do frontend
-- [ ] Verificar: pause → áudio para, WebSocket ativo
-- [ ] Verificar: play após pause → retoma do ponto exato
-- [ ] Verificar: skip → crossfade 500ms imediato
-- [ ] Verificar: volume 0.7 → ajuste gradual sem clique audível
+- [x] Handlers para `media:pause`, `media:play`, `media:skip`, `media:volume` no WebSocket listener do frontend
+- [x] Verificar: pause → áudio para, WebSocket ativo
+- [x] Verificar: play após pause → retoma do ponto exato
+- [x] Verificar: skip → crossfade 500ms imediato
+- [x] Verificar: volume 0.7 → ajuste gradual sem clique audível
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+
+- Modificado o payload do servidor no handler de mensagens para que comandos restritos `media:pause`, `media:skip`, `media:volume` emitam de fato um socket broadcastEvent que chega ao cliente.
+- Implementada a leitura do WebSocket na interface de React interpretando essas instâncias e utilizando os métodos nativos da Web Audio API (`resume()`, `suspend()`, `setVolume()`, e `advanceTrack()`).
+- O volume age usando o mesmo conceito de Ramp (`linearRampToValueAtTime`) da story anterior com 100ms em vez de corte direto, o que diminui clicks audíveis nas freqüências.
+
+### Completion Notes
+
+✅ Story 2.4 Completa.
+- O Frontend e a CLI agora estão operacionais lado-a-lado podendo um acionar a ação pelo prompt da node CLI e o Next.js agir alterando a reprodução através do motor sem reload ou paradas bruscas no loop de playback.
+
+### File List
+- `server/broadcast.ts` — modificado (adicionado `broadcastEvent()`)
+- `server/server.ts` — modificado (integrando handlers)
+- `src/app/page.tsx` — modificado (volume state mapping)
+
+### Change Log
+- 2026-06-11: Story 2.4 implementada — Integração dos controles de playback real-time com CLI.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

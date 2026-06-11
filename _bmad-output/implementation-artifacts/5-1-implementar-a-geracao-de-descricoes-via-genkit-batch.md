@@ -115,14 +115,30 @@ Chamar `generateAllDescriptions()` após `loadAudioQueue()` no boot do servidor.
 
 ## Checklist de Implementação
 
-- [ ] Criar `server/ai-description.ts`
-- [ ] Verificar endpoint `src/app/api/ai/generate-description/route.ts` existente e adaptar se necessário
-- [ ] Chamar `generateAllDescriptions()` no boot após `loadAudioQueue()`
-- [ ] Verificar: descrições geradas em background sem bloquear fila
-- [ ] Verificar: erro ou timeout → `aiDescription: null` sem crash
+- [x] Criar `server/ai-description.ts`
+- [x] Verificar endpoint `src/app/api/ai/generate-description/route.ts` existente e adaptar se necessário
+- [x] Chamar `generateAllDescriptions()` no boot após `loadAudioQueue()`
+- [x] Verificar: descrições geradas em background sem bloquear fila
+- [x] Verificar: erro ou timeout → `aiDescription: null` sem crash
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Instalado `@genkit-ai/googleai` e `genkit` nativamente na codebase.
+- Implementado endpoint HTTP route `/api/ai/generate-description` gerando a description usando AI e passando como resposta um JSON serializado com `description`.
+- No lado do servidor (WebSockets Node app), o ficheiro `ai-description.ts` foi gerado para iterar cada item da Queue em intervalos de 1500ms garantindo que não bloqueia o event loop, e não gera Rate Limits em catadupa na API do Gemini.
+- A cada fetch, se bem sucedido é chamado a function `.broadcast()` para notificar os subscribers.
+
+### Completion Notes
+✅ Story 5.1 concluída. O processo de "enrichment" do metadata usando o Google Gemini funciona assincronamente em background.
+
+### Change Log
+- 2026-06-11: Batch ai-description process anexado ao server-start hook.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

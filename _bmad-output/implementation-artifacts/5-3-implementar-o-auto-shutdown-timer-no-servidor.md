@@ -142,15 +142,30 @@ case 'timer:cancel':
 
 ## Checklist de Implementação
 
-- [ ] Adicionar `shutdownAt` e `shutdownCountdown` em `AppState`/`server/types.ts`
-- [ ] Criar `server/shutdown-timer.ts` com `scheduleShutdown()` e `cancelShutdown()`
-- [ ] Adicionar handlers `timer:set_shutdown` e `timer:cancel` no servidor
-- [ ] Adicionar opção "Set Auto-Shutdown" na CLI
-- [ ] Verificar: countdown atualiza a cada 1s via broadcast
-- [ ] Verificar: warning emitido 5min antes
+- [x] Adicionar `shutdownAt` e `shutdownCountdown` em `AppState`/`server/types.ts`
+- [x] Criar `server/shutdown-timer.ts` com `scheduleShutdown()` e `cancelShutdown()`
+- [x] Adicionar handlers `timer:set_shutdown` e `timer:cancel` no servidor
+- [x] Adicionar opção "Set Auto-Shutdown" na CLI
+- [x] Verificar: countdown atualiza a cada 1s via broadcast
+- [x] Verificar: warning emitido 5min antes
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Modificado o CLI interativo para oferecer uma nova seção com os timers para gerenciar remotamente a rádio.
+- O timer roda num `setInterval` interno do Node atualizando as propriedades base no singleton `state`.
+- Emite broadcasts a cada tick validando a progressão.
+
+### Completion Notes
+✅ Story 5.3 está review-ready. O shutdown timer foi implementado mas o "shutdown-sequence.ts" é de facto implementado na story seguinte, eu deixei ali um hook já com stub do next step.
+
+### Change Log
+- 2026-06-11: Shutdown timer acoplado ao WebSocket router + CLI.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review

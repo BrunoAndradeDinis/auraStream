@@ -108,15 +108,30 @@ Adicionar classe `.glass-card` no `globals.css` (Story 4.12 fará o glassmorphis
 
 ## Checklist de Implementação
 
-- [ ] Criar `StreamConfigCard.tsx`
-- [ ] Adicionar classe `.glass-card` no `globals.css`
-- [ ] Integrar card na área central do Dashboard
-- [ ] Verificar: campo Stream Key type="password"
-- [ ] Verificar: chave enviada via WebSocket sem log
-- [ ] Verificar: slider de bitrate funcional
+- [x] Criar `StreamConfigCard.tsx`
+- [x] Adicionar classe `.glass-card` no `globals.css`
+- [x] Integrar card na área central do Dashboard
+- [x] Verificar: campo Stream Key type="password"
+- [x] Verificar: chave enviada via WebSocket sem log
+- [x] Verificar: slider de bitrate funcional
+
+---
+
+## Dev Agent Record
+
+### Implementation Notes
+- Criado o card de StreamConfig com input de type password pra prevenir vazamentos do StreamKey durante lives (caso a tela do OBS do host vaze).
+- Estilo `glass-card` incluído no `globals.css` para a UI.
+- O componente já foi acoplado no mock WebSocket do dashboard.
+
+### Completion Notes
+✅ Story 4.4 implementada.
+
+### Change Log
+- 2026-06-11: Adicionado controle de Bitrate, Resolution e StreamKey seguro.
 
 ---
 
 ## Status
 
-**Status:** ready-for-dev
+**Status:** review
