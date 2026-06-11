@@ -1,5 +1,6 @@
 ---
-stepsCompleted: [1, 2]
+stepsCompleted: [1, 2, 3, 4]
+status: complete
 inputDocuments: 
   - "_bmad-output/planning-artifacts/prd-v2-0-aurastream/prd.md"
   - "_bmad-output/planning-artifacts/architecture.md"
@@ -784,3 +785,106 @@ Para que a interface web e a CLI estejam sempre em sincronia.
 **When** o servidor fica indisponível
 **Then** o Dashboard exibe banner `⚠️ Connection lost — retrying...` e tenta reconectar a cada 3s
 **And** quando a conexão é restaurada, o banner desaparece e o estado é sincronizado com o snapshot atual
+
+---
+
+## Epic 5: Automação e Descrições via IA *(Opcional)*
+
+Bruno pode agendar o encerramento automático da transmissão com preset de tempo e as músicas exibem descrições poéticas geradas pelo Genkit no MiniPlayer.
+
+**FRs cobertos:** FR10, FR6 (aiDescription)
+
+### Story 5.1: Implementar a Geração de Descrições via Genkit (Batch por Faixa)
+
+Como Bruno,
+Eu quero que o servidor gere automaticamente uma descrição poética para cada faixa nova usando o Genkit/Gemini,
+Para que o MiniPlayer exiba textos evocativos que enriqueçam a experiência dos espectadores.
+
+**Esforço estimado:** ~4h
+
+**Acceptance Criteria:**
+
+**Given** uma faixa entra na fila e não possui campo `aiDescription` nos seus metadados
+**When** o servidor a detecta
+**Then** `server/ai-description.ts` chama o Genkit com o prompt: `"Generate a 2-line poetic description (max 120 chars) for a song titled '{title}' by {artist}, genre: {genre}. Write in English, atmospheric and evocative."`
+**And** a resposta é salva em `state.queue[i].aiDescription` e persistida em memória
+**And** se o Genkit retornar erro, `aiDescription` fica como `null` e o MiniPlayer omite a linha de descrição sem crash
+**And** a geração ocorre em background sem bloquear a fila nem a reprodução
+**And** a latência máxima tolerada é de 5s por faixa — se ultrapassar, cancela e usa `null`
+
+---
+
+### Story 5.2: Exibir a Descrição IA no MiniPlayer
+
+Como Bruno,
+Eu quero que o MiniPlayer exiba a `aiDescription` gerada abaixo do gênero da faixa,
+Para que os espectadores tenham uma camada extra de profundidade narrativa sobre a música.
+
+**Esforço estimado:** ~2h
+
+**Acceptance Criteria:**
+
+**Given** `state.currentTrack.aiDescription` não é null
+**When** o MiniPlayer renderiza
+**Then** a descrição é exibida em `Inter` 9px italic `#94A3B8`, limitada a 2 linhas com `overflow: hidden; text-overflow: ellipsis; -webkit-line-clamp: 2`
+**Given** `state.currentTrack.aiDescription === null`
+**When** o MiniPlayer renderiza
+**Then** a linha de descrição é omitida e o layout se ajusta verticalmente sem espaço vazio
+
+---
+
+### Story 5.3: Implementar o Auto-Shutdown Timer no Servidor
+
+Como Bruno,
+Eu quero configurar um timer de encerramento automático da transmissão com presets de tempo,
+Para que eu inicie uma sessão de rádio e confie que ela encerrará no horário correto sem supervisão.
+
+**Esforço estimado:** ~3h
+
+**Acceptance Criteria:**
+
+**Given** Bruno seleciona "Set Auto-Shutdown" na CLI e escolhe um preset (ex: "2 hours")
+**When** o preset é confirmado
+**Then** o servidor armazena `state.shutdownAt = Date.now() + durationMs` e emite broadcast com o timestamp alvo
+**And** o servidor calcula um timer secundário para `shutdownAt - 5min` que emite `{ "event": "server:shutdown_warning", "payload": { "minutesLeft": 5 } }`
+**And** um `setInterval` de 1s atualiza `state.shutdownCountdown` com os segundos restantes
+**And** a precisão do encerramento é de ±5s em relação ao horário agendado
+
+---
+
+### Story 5.4: Implementar a Sequência de Encerramento Graceful do Auto-Shutdown
+
+Como Bruno,
+Eu quero que o Auto-Shutdown execute uma sequência ordenada de ações ao atingir o tempo limite,
+Para que o stream encerre de forma limpa sem deixar o canal do YouTube em estado indeterminado.
+
+**Esforço estimado:** ~3h
+
+**Acceptance Criteria:**
+
+**Given** o timer de auto-shutdown atingiu `state.shutdownAt`
+**When** o encerramento é disparado
+**Then** a sequência executa nesta ordem: (1) emite `media:pause`, (2) aguarda 5s, (3) emite `media:stop_stream`, (4) loga `[shutdown] Scheduled shutdown at HH:MM` no `compliance-audit.jsonl`, (5) atualiza `state.status` para `"idle"`
+**And** o timer é cancelado automaticamente após a execução
+**And** se cancelado pelo evento `{ "event": "timer:cancel" }` antes do disparo, nenhuma ação de encerramento é executada e `state.shutdownAt` é zerado
+
+---
+
+### Story 5.5: Exibir Countdown de Auto-Shutdown na CLI e no Dashboard
+
+Como Bruno,
+Eu quero que ambas as interfaces exibam o tempo restante para o auto-shutdown,
+Para que eu saiba quando a sessão vai encerrar sem fazer cálculos manualmente.
+
+**Esforço estimado:** ~2h
+
+**Acceptance Criteria:**
+
+**Given** `state.shutdownAt` não é null e o countdown está ativo
+**When** a CLI exibe o status
+**Then** uma linha `⏱ Auto-shutdown in: HH:MM:SS` é exibida em `JetBrains Mono` Cyan
+**When** o Dashboard está aberto
+**Then** um badge `⏱ HH:MM:SS` é exibido na sidebar próximo ao Live Status, atualizando a cada segundo
+**When** `state.shutdownAt === null`
+**Then** nenhum countdown é exibido em nenhuma interface
+**And** o aviso de 5min exibe um toast na UI com texto `⚠️ Stream shutting down in 5 minutes`
