@@ -138,6 +138,7 @@ wss.on('connection', (ws: WebSocket) => {
         } else {
           advanceToNextValidTrack(null);
         }
+        import('./stream').then(m => m.playCurrentTrackAudio());
         broadcastEvent('media:skip', {});
         break;
       case 'media:volume':
@@ -160,6 +161,7 @@ wss.on('connection', (ws: WebSocket) => {
           } else {
             setState({ currentTrack: nextTrack });
             broadcast();
+            import('./stream').then(m => m.playCurrentTrackAudio());
             auditLog('INFO', 'track_play', nextTrack.id, 'APPROVED', result.metadata.source);
           }
         }
@@ -225,5 +227,5 @@ wss.on('connection', (ws: WebSocket) => {
   });
 });
 
-export { clients, wss };
+export { clients, wss, advanceToNextValidTrack };
 

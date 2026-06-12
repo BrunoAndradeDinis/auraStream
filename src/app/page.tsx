@@ -139,8 +139,8 @@ export default function AuraStream() {
   useEffect(() => {
     if (audioEnabled && tracks.length > 0) {
       const track = tracks[currentTrackIndex];
-      if (track && track.filename && currentlyPlayingRef.current !== track.filename) {
-        currentlyPlayingRef.current = track.filename;
+      if (track && track.filename && currentlyPlayingRef.current !== track.id) {
+        currentlyPlayingRef.current = track.id;
         const onEnd = async () => {
           const res = await advanceTrack(false);
           if (res) {

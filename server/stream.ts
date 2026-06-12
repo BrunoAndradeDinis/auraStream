@@ -162,12 +162,15 @@ async function ensureBrowserReady(): Promise<void> {
  */
 function startAudioDecoder(audioPath: string): void {
   if (audioDecoderProcess) {
-    audioDecoderProcess.kill('SIGKILL');
+    const oldProcess = audioDecoderProcess;
+    audioDecoderProcess = null;
+    oldProcess.removeAllListeners('close');
+    oldProcess.kill('SIGKILL');
   }
 
   console.log(`[stream] Starting audio decoder for: ${path.basename(audioPath)}`);
 
-  audioDecoderProcess = spawn('ffmpeg', [
+  const p = spawn('ffmpeg', [
     '-v', 'error',
     '-i', audioPath,
     '-f', 's16le',
@@ -178,27 +181,41 @@ function startAudioDecoder(audioPath: string): void {
     stdio: ['ignore', 'pipe', 'inherit']
   });
 
-  if (ffmpegProcess && ffmpegProcess.stdin && audioDecoderProcess.stdout) {
+  audioDecoderProcess = p;
+
+  if (ffmpegProcess && ffmpegProcess.stdin && p.stdout) {
     // Handle EPIPE on stdout if main ffmpeg dies suddenly
-    audioDecoderProcess.stdout.on('error', (err: any) => {
+    p.stdout.on('error', (err: any) => {
       if (err.code !== 'EPIPE') console.error('[stream] Decoder stdout error:', err.message);
     });
 
     // Pipe PCM to main FFmpeg stdin. `end: false` prevents closing stdin when decoder finishes.
-    audioDecoderProcess.stdout.pipe(ffmpegProcess.stdin, { end: false });
+    p.stdout.pipe(ffmpegProcess.stdin, { end: false });
   }
 
-  audioDecoderProcess.on('error', (err) => {
+  p.on('error', (err) => {
     console.error('[stream] Audio decoder error:', err.message);
   });
 
-  audioDecoderProcess.on('close', (code) => {
-    audioDecoderProcess = null;
-    console.log(`[stream] Audio decoder finished (code ${code})`);
-    if (!isStopped) {
-      onTrackEnded();
+  p.on('close', (code) => {
+    if (audioDecoderProcess === p) {
+      audioDecoderProcess = null;
+      console.log(`[stream] Audio decoder finished (code ${code})`);
+      if (!isStopped) {
+        onTrackEnded();
+      }
     }
   });
+}
+
+export function playCurrentTrackAudio(): void {
+  if (isStopped || !activeStreamKey) return;
+  const newPath = resolveAudioPath();
+  if (newPath) {
+    startAudioDecoder(newPath);
+  } else {
+    console.warn('[stream] No audio path resolved for the next track');
+  }
 }
 
 export async function startStream(streamKey: string): Promise<void> {
@@ -282,32 +299,20 @@ function onTrackEnded(): void {
     return;
   }
 
-  // Find next track after currentTrack
-  const currentIndex = state.currentTrack
-    ? queue.findIndex((t) => t.id === state.currentTrack!.id)
-    : -1;
-  const nextIndex = (currentIndex + 1) % queue.length;
-  const nextTrack = queue[nextIndex];
-
-  console.log(`[stream] Track ended — advancing to: ${nextTrack.filename}`);
-  setState({ currentTrack: nextTrack });
-  broadcast();
-  broadcastEvent('media:skip', {});
-
-  // Small delay to let state propagate before spawning new decoder
-  setTimeout(() => {
-    if (isStopped || !activeStreamKey) return;
-    try {
-      const newPath = resolveAudioPath();
-      if (newPath) {
-        startAudioDecoder(newPath);
-      } else {
-        console.warn('[stream] No audio path resolved for the next track');
-      }
-    } catch (err) {
-      console.error('[stream] Failed to start next track decoder:', (err as Error).message);
+  // Use the central compliance logic from server.ts to advance track
+  import('./server').then(m => {
+    if (state.currentTrack) {
+      m.advanceToNextValidTrack(state.currentTrack.id);
+    } else {
+      m.advanceToNextValidTrack(null);
     }
-  }, 100);
+    broadcastEvent('media:skip', {});
+    
+    // Play the newly advanced track
+    playCurrentTrackAudio();
+  }).catch(err => {
+    console.error('[stream] Failed to advance track dynamically:', err);
+  });
 }
 
 /** @deprecated kept for backward compatibility via WebSocket binary chunks */

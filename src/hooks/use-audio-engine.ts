@@ -23,9 +23,14 @@ export function useAudioEngine() {
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
 
-      sourceRef.current?.stop();
-      sourceRef.current?.disconnect();
-      sourceGainRef.current?.disconnect();
+      if (sourceRef.current) {
+        sourceRef.current.onended = null;
+        try { sourceRef.current.stop(); } catch (e) {}
+        sourceRef.current.disconnect();
+      }
+      if (sourceGainRef.current) {
+        sourceGainRef.current.disconnect();
+      }
 
       const source = ctx.createBufferSource();
       source.buffer = audioBuffer;
