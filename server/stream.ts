@@ -5,6 +5,7 @@ import { state, setState } from './state';
 import { broadcast, broadcastEvent } from './broadcast';
 
 let ffmpegProcess: ChildProcess | null = null;
+let audioDecoderProcess: ChildProcess | null = null;
 let activeBrowser: Browser | null = null;
 
 let reconnectAttempts = 0;
@@ -61,7 +62,7 @@ function getDisplaySize(): { width: number; height: number } {
  * When the MP3 ends, FFmpeg exits with code 0 and onTrackEnded() is
  * called to advance the queue and restart for the next track.
  */
-function buildFFmpegArgs(rtmpUrl: string, audioPath: string): string[] {
+function buildFFmpegArgs(rtmpUrl: string): string[] {
   const display = process.env.DISPLAY || ':99';
   const { width, height } = getDisplaySize();
   const captureSize = `${width}x${height}`;
@@ -77,8 +78,11 @@ function buildFFmpegArgs(rtmpUrl: string, audioPath: string): string[] {
     '-video_size', captureSize,
     '-i', display,
 
-    // ── Audio input: MP3 file ─────────────────────────────────────────
-    '-i', audioPath,
+    // ── Audio input: Raw PCM stream from stdin (so it never drops) ────
+    '-f', 's16le',
+    '-ar', '44100',
+    '-ac', '2',
+    '-i', 'pipe:0',
 
     // ── Video encode ──────────────────────────────────────────────────
     '-c:v', 'libx264',
@@ -150,6 +154,46 @@ async function ensureBrowserReady(): Promise<void> {
   }
 }
 
+/**
+ * Spawns an FFmpeg decoder for a specific MP3 track and pipes its raw PCM
+ * audio to the continuous main FFmpeg process.
+ */
+function startAudioDecoder(audioPath: string): void {
+  if (audioDecoderProcess) {
+    audioDecoderProcess.kill('SIGKILL');
+  }
+
+  console.log(`[stream] Starting audio decoder for: ${path.basename(audioPath)}`);
+
+  audioDecoderProcess = spawn('ffmpeg', [
+    '-v', 'error',
+    '-i', audioPath,
+    '-f', 's16le',
+    '-ar', '44100',
+    '-ac', '2',
+    'pipe:1'
+  ], {
+    stdio: ['ignore', 'pipe', 'inherit']
+  });
+
+  if (ffmpegProcess && ffmpegProcess.stdin && audioDecoderProcess.stdout) {
+    // Pipe PCM to main FFmpeg stdin. `end: false` prevents closing stdin when decoder finishes.
+    audioDecoderProcess.stdout.pipe(ffmpegProcess.stdin, { end: false });
+  }
+
+  audioDecoderProcess.on('error', (err) => {
+    console.error('[stream] Audio decoder error:', err.message);
+  });
+
+  audioDecoderProcess.on('close', (code) => {
+    audioDecoderProcess = null;
+    console.log(`[stream] Audio decoder finished (code ${code})`);
+    if (!isStopped) {
+      onTrackEnded();
+    }
+  });
+}
+
 export async function startStream(streamKey: string): Promise<void> {
   if (ffmpegProcess) {
     console.warn('[stream] FFmpeg process already running');
@@ -168,13 +212,13 @@ export async function startStream(streamKey: string): Promise<void> {
   await ensureBrowserReady();
 
   const rtmpUrl = `rtmp://a.rtmp.youtube.com/live2/${streamKey}`;
-  const args = buildFFmpegArgs(rtmpUrl, audioPath);
+  const args = buildFFmpegArgs(rtmpUrl);
 
-  console.log(`[stream] Starting FFmpeg — audio: ${path.basename(audioPath)}`);
+  console.log(`[stream] Starting Main FFmpeg Process...`);
   console.log(`[stream] DISPLAY=${process.env.DISPLAY || ':99'}`);
 
   ffmpegProcess = spawn('ffmpeg', args, {
-    stdio: ['ignore', 'pipe', 'pipe'],
+    stdio: ['pipe', 'pipe', 'pipe'], // stdin MUST be pipe for raw PCM audio
   });
 
   ffmpegProcess.stdout?.on('data', (data) => {
@@ -196,19 +240,18 @@ export async function startStream(streamKey: string): Promise<void> {
     ffmpegProcess = null;
 
     if (isStopped) return;
-
-    if (code === 0) {
-      // Track finished naturally — advance queue and start next track
-      onTrackEnded();
-    } else {
-      handleStreamDrop();
-    }
+    
+    // Main FFmpeg should not close naturally. If it does, there's an error/network drop.
+    handleStreamDrop();
   });
 
   setState({ status: 'streaming' });
   broadcast();
   reconnectAttempts = 0;
-  console.log('[stream] FFmpeg process started (x11grab + file audio)');
+  console.log('[stream] Main FFmpeg process started. Waiting for audio...');
+  
+  // Start the first audio track
+  startAudioDecoder(audioPath);
 }
 
 /**
@@ -238,16 +281,20 @@ function onTrackEnded(): void {
   broadcast();
   broadcastEvent('media:skip', {});
 
-  // Small delay to let state propagate
-  setTimeout(async () => {
+  // Small delay to let state propagate before spawning new decoder
+  setTimeout(() => {
     if (isStopped || !activeStreamKey) return;
     try {
-      await startStream(activeStreamKey!);
+      const newPath = resolveAudioPath();
+      if (newPath) {
+        startAudioDecoder(newPath);
+      } else {
+        console.warn('[stream] No audio path resolved for the next track');
+      }
     } catch (err) {
-      console.error('[stream] Failed to start next track:', (err as Error).message);
-      handleStreamDrop();
+      console.error('[stream] Failed to start next track decoder:', (err as Error).message);
     }
-  }, 500);
+  }, 100);
 }
 
 /** @deprecated kept for backward compatibility via WebSocket binary chunks */
@@ -292,6 +339,11 @@ export function cancelReconnect(): void {
 
 export async function stopStream(skipCancel = false): Promise<void> {
   if (!skipCancel) cancelReconnect();
+
+  if (audioDecoderProcess) {
+    audioDecoderProcess.kill('SIGKILL');
+    audioDecoderProcess = null;
+  }
 
   if (ffmpegProcess) {
     const proc = ffmpegProcess;
