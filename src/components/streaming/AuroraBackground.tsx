@@ -1,98 +1,45 @@
 "use client"
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 export const AuroraBackground: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId: number;
-    let lastFrame = 0;
-    const FPS = 15; // Reduzido de 30 para 15 para salvar CPU na VM
-    const INTERVAL = 1000 / FPS;
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    const drawAurora = (t: number) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Onda Cyan (#00F0FF)
-      const gradCyan = ctx.createRadialGradient(
-        canvas.width * (0.3 + 0.1 * Math.sin(t * 0.0005)),
-        canvas.height * 0.4,
-        0,
-        canvas.width * 0.5, canvas.height * 0.5,
-        canvas.width * 0.6
-      );
-      gradCyan.addColorStop(0, 'rgba(0, 240, 255, 0.4)');
-      gradCyan.addColorStop(1, 'transparent');
-      
-      ctx.fillStyle = gradCyan;
-      ctx.globalCompositeOperation = 'screen';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Onda Roxo (#7C3AED)
-      const gradPurple = ctx.createRadialGradient(
-        canvas.width * (0.7 + 0.05 * Math.cos(t * 0.0007)),
-        canvas.height * 0.6,
-        0,
-        canvas.width * 0.5, canvas.height * 0.5,
-        canvas.width * 0.5
-      );
-      gradPurple.addColorStop(0, 'rgba(124, 58, 237, 0.4)');
-      gradPurple.addColorStop(1, 'transparent');
-      
-      ctx.fillStyle = gradPurple;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    };
-
-    const animate = (timestamp: number) => {
-      if (document.hidden) {
-        animationFrameId = requestAnimationFrame(animate);
-        return;
-      }
-      
-      if (timestamp - lastFrame < INTERVAL) {
-        animationFrameId = requestAnimationFrame(animate);
-        return;
-      }
-      
-      lastFrame = timestamp;
-      drawAurora(timestamp);
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
   return (
-    <>
+    <div 
+      className="fixed inset-0 w-full h-full bg-slate-950 overflow-hidden" 
+      style={{ zIndex: 0 }} 
+    >
+      <div className="absolute top-0 left-0 w-full h-full opacity-60">
+        {/* Cyan Blob */}
+        <div 
+          className="absolute top-[20%] left-[20%] w-[50vw] h-[50vw] rounded-full mix-blend-screen opacity-50"
+          style={{
+            background: 'radial-gradient(circle, rgba(0,240,255,0.4) 0%, transparent 60%)',
+            animation: 'pulse 10s infinite alternate'
+          }}
+        />
+        {/* Purple Blob */}
+        <div 
+          className="absolute top-[40%] left-[40%] w-[60vw] h-[60vw] rounded-full mix-blend-screen opacity-40"
+          style={{
+            background: 'radial-gradient(circle, rgba(124,58,237,0.4) 0%, transparent 60%)',
+            animation: 'pulse 15s infinite alternate-reverse'
+          }}
+        />
+        {/* Deep Blue Blob */}
+        <div 
+          className="absolute top-[10%] left-[50%] w-[45vw] h-[45vw] rounded-full mix-blend-screen opacity-40"
+          style={{
+            background: 'radial-gradient(circle, rgba(37,99,235,0.4) 0%, transparent 60%)',
+            animation: 'pulse 12s infinite alternate'
+          }}
+        />
+      </div>
+      
+      {/* Soft noise overlay for texture */}
       <div 
-        className="fixed inset-0 w-full h-full bg-gradient-to-br from-slate-900 via-black to-slate-950" 
-        style={{ zIndex: 0 }} 
+        className="absolute inset-0 w-full h-full opacity-10 pointer-events-none"
+        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}
       />
-      <canvas 
-        ref={canvasRef} 
-        className="fixed inset-0 w-full h-full aurora-canvas pointer-events-none mix-blend-screen"
-        style={{ zIndex: 1, opacity: 0.5 }}
-      />
-    </>
+    </div>
   );
 };

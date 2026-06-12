@@ -5,36 +5,6 @@ export function StreamConfigCard({ onSend, sendBinary }: { onSend: (event: strin
   const [bitrate, setBitrate] = useState(3500);
   const [resolution, setResolution] = useState('1080p');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isCapturing, setIsCapturing] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-
-  const startCapture = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
-      const recorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp8,opus' });
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0 && sendBinary) sendBinary(e.data);
-      };
-      recorder.start(1000);
-      mediaRecorderRef.current = recorder;
-      setIsCapturing(true);
-
-      stream.getVideoTracks()[0].onended = () => {
-        stopCapture();
-      };
-    } catch (err) {
-      console.error('Failed to capture:', err);
-    }
-  };
-
-  const stopCapture = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-      mediaRecorderRef.current.stream.getTracks().forEach(t => t.stop());
-      mediaRecorderRef.current = null;
-    }
-    setIsCapturing(false);
-  };
 
   const handleKeySubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,13 +20,6 @@ export function StreamConfigCard({ onSend, sendBinary }: { onSend: (event: strin
     <div className="glass-card">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-bold font-outfit text-white">Stream Config</h3>
-        <button 
-          onClick={isCapturing ? stopCapture : startCapture}
-          className={`btn-primary ${isCapturing ? 'bg-destructive' : ''}`}
-          style={isCapturing ? { backgroundColor: 'var(--destructive)', color: 'white' } : {}}
-        >
-          {isCapturing ? 'Parar Captura' : 'Transmissão Manual'}
-        </button>
       </div>
       <form onSubmit={handleKeySubmit} className="flex flex-col gap-2 mb-6">
         <label className="text-sm text-muted">YouTube Stream Key</label>
