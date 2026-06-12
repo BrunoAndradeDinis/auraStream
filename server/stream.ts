@@ -177,6 +177,11 @@ function startAudioDecoder(audioPath: string): void {
   });
 
   if (ffmpegProcess && ffmpegProcess.stdin && audioDecoderProcess.stdout) {
+    // Handle EPIPE on stdout if main ffmpeg dies suddenly
+    audioDecoderProcess.stdout.on('error', (err: any) => {
+      if (err.code !== 'EPIPE') console.error('[stream] Decoder stdout error:', err.message);
+    });
+
     // Pipe PCM to main FFmpeg stdin. `end: false` prevents closing stdin when decoder finishes.
     audioDecoderProcess.stdout.pipe(ffmpegProcess.stdin, { end: false });
   }
@@ -220,6 +225,12 @@ export async function startStream(streamKey: string): Promise<void> {
   ffmpegProcess = spawn('ffmpeg', args, {
     stdio: ['pipe', 'pipe', 'pipe'], // stdin MUST be pipe for raw PCM audio
   });
+
+  if (ffmpegProcess.stdin) {
+    ffmpegProcess.stdin.on('error', (err: any) => {
+      if (err.code !== 'EPIPE') console.error('[stream] Main FFmpeg stdin error:', err.message);
+    });
+  }
 
   ffmpegProcess.stdout?.on('data', (data) => {
     process.stdout.write(`[ffmpeg:out] ${data}`);
