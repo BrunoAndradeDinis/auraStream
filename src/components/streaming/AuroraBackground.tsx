@@ -14,7 +14,7 @@ export const AuroraBackground: React.FC = () => {
 
     let animationFrameId: number;
     let lastFrame = 0;
-    const FPS = 30;
+    const FPS = 15; // Reduzido de 30 para 15 para salvar CPU na VM
     const INTERVAL = 1000 / FPS;
 
     const resize = () => {

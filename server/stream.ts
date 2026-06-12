@@ -71,6 +71,7 @@ function buildFFmpegArgs(rtmpUrl: string, audioPath: string): string[] {
 
   return [
     // ── Video input: X11 virtual display ──────────────────────────────
+    '-draw_mouse', '0',           // Remove mouse cursor from stream
     '-f', 'x11grab',
     '-framerate', '30',
     '-video_size', captureSize,
@@ -81,7 +82,7 @@ function buildFFmpegArgs(rtmpUrl: string, audioPath: string): string[] {
 
     // ── Video encode ──────────────────────────────────────────────────
     '-c:v', 'libx264',
-    '-preset', 'veryfast',
+    '-preset', 'ultrafast',       // Ultrafast for minimal CPU load
     '-tune', 'zerolatency',
     '-b:v', '3500k',
     '-maxrate', '3500k',
