@@ -84,20 +84,14 @@ export const AuroraBackground: React.FC = () => {
 
   return (
     <>
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="fixed inset-0 w-full h-full object-cover pointer-events-none"
-        style={{ zIndex: 0 }}
-      >
-        <source src="/video-background.mp4" type="video/mp4" />
-      </video>
+      <div 
+        className="fixed inset-0 w-full h-full bg-gradient-to-br from-slate-900 via-black to-slate-950" 
+        style={{ zIndex: 0 }} 
+      />
       <canvas 
         ref={canvasRef} 
         className="fixed inset-0 w-full h-full aurora-canvas pointer-events-none mix-blend-screen"
-        style={{ zIndex: 1, opacity: 0.3 }}
+        style={{ zIndex: 1, opacity: 0.5 }}
       />
     </>
   );

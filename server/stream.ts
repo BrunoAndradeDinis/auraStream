@@ -130,7 +130,11 @@ async function ensureBrowserReady(): Promise<void> {
         '--window-position=0,0',
         '--window-size=1920,1080',
         '--hide-scrollbars',
-        '--disable-infobars'
+        '--disable-infobars',
+        '--disable-accelerated-video-decode',
+        '--disable-features=AudioServiceOutOfProcess',
+        '--js-flags="--max-old-space-size=512"',
+        '--memory-pressure-off'
       ],
       defaultViewport: { width: 1920, height: 1080 }
     });
