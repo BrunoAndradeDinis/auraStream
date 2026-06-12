@@ -15,7 +15,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo -e "${GREEN}[1/3] Iniciando Servidor WebSocket (Backend)...${NC}"
+echo -e "${GREEN}[1/2] Iniciando Servidor WebSocket (Backend)...${NC}"
 if [ -z "$DISPLAY" ] && command -v xvfb-run >/dev/null 2>&1; then
     echo -e "${YELLOW}⚠️ Sem DISPLAY detectado. Iniciando servidor com Xvfb (Virtual Framebuffer)...${NC}"
     xvfb-run -a --server-args="-screen 0 1920x1080x24" yarn server &
@@ -24,18 +24,15 @@ else
 fi
 SERVER_PID=$!
 
-echo -e "${GREEN}[2/3] Iniciando Servidor Genkit (IA)...${NC}"
-yarn genkit:dev &
-GENKIT_PID=$!
 
-echo -e "${GREEN}[3/3] Iniciando Next.js (Frontend)...${NC}"
+echo -e "${GREEN}[2/2] Iniciando Next.js (Frontend)...${NC}"
 yarn dev &
 NEXT_PID=$!
 
 echo -e "\n${CYAN}✅ Todos os serviços estão a correr!${NC}"
 echo -e "   - Frontend: http://localhost:9002"
 echo -e "   - Backend: ws://localhost:9003"
-echo -e "   - Genkit: http://localhost:4000"
+
 echo -e "\n${YELLOW}Pressiona Ctrl+C para encerrar todos os processos.${NC}\n"
 
 # Aguardar pelos processos

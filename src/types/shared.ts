@@ -4,13 +4,18 @@ export interface TrackInfo {
   id: string;
   filename: string;
   path: string;
-  aiDescription?: string | null;
+
   isVerified?: boolean;
   metadata?: {
     title?: string;
     artist: string;
     genre: string;
     source: string;
+    song_name?: string;
+    author?: string;
+    provider?: string;
+    download_stream_url?: string;
+    watch_url?: string;
   };
 }
 

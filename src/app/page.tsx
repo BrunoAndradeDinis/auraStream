@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AuroraBackground } from '@/components/streaming/AuroraBackground';
 import { MiniPlayer } from '@/components/streaming/MiniPlayer';
-import { generateCreativeTrackDescription } from '@/ai/flows/generate-creative-track-description';
+
 import { useToast } from '@/hooks/use-toast';
 import { useAudioEngine } from '@/hooks/use-audio-engine';
 import { useWebSocket } from '@/hooks/use-websocket';
@@ -15,13 +15,22 @@ interface Track {
   genre: string;
   description: string;
   filename?: string;
+  metadata?: {
+    song_name?: string;
+    author?: string;
+    provider?: string;
+    download_stream_url?: string;
+    watch_url?: string;
+  };
 }
+
+import musicDetails from '@/assets/details/music-details.json';
 
 export default function AuraStream() {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isStreaming, setIsStreaming] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+
   const [showOverlay, setShowOverlay] = useState(true);
   const { toast } = useToast();
 
@@ -59,14 +68,28 @@ export default function AuraStream() {
     if (event === 'server:state_sync') {
       const state = payload;
       if (state.queue && state.queue.length > 0) {
-        const mappedTracks = state.queue.map((t: any) => ({
-          id: t.id,
-          title: t.filename.replace('.mp3', ''),
-          artist: 'Unknown',
-          genre: 'Unknown',
-          description: '',
-          filename: t.filename
-        }));
+        const mappedTracks = state.queue.map((t: any) => {
+          const matchedDetail = musicDetails.find((d: any) => {
+            const nameToMatch = d.song.song_name.split(' (')[0].split(' [')[0].toLowerCase();
+            return t.filename.toLowerCase().includes(nameToMatch);
+          });
+
+          return {
+            id: t.id,
+            title: t.filename.replace('.mp3', ''),
+            artist: matchedDetail ? matchedDetail.song.author : 'Unknown',
+            genre: matchedDetail ? matchedDetail.provider : 'Unknown',
+            description: '',
+            filename: t.filename,
+            metadata: {
+              song_name: matchedDetail ? matchedDetail.song.song_name : undefined,
+              author: matchedDetail ? matchedDetail.song.author : undefined,
+              provider: matchedDetail ? matchedDetail.provider : undefined,
+              download_stream_url: matchedDetail ? matchedDetail.download_stream_url : undefined,
+              watch_url: matchedDetail ? matchedDetail.watch_url : undefined
+            }
+          };
+        });
         
         setTracks((prev) => {
           if (prev.length === 0) return mappedTracks;
@@ -134,35 +157,7 @@ export default function AuraStream() {
     }
   }, [audioEnabled, tracks, currentTrackIndex, loadAndPlay, advanceTrack, send]);
 
-  const handleGenerateDescription = async (track: Track) => {
-    setIsGenerating(true);
-    try {
-      const result = await generateCreativeTrackDescription({
-        title: track.title,
-        artist: track.artist,
-        genre: track.genre
-      });
-      
-      setTracks(prev => prev.map(t => 
-        t.id === track.id 
-          ? { ...t, description: result.description } 
-          : t
-      ));
-      
-      toast({
-        title: "Metadata Enhanced",
-        description: "AI description generated successfully."
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Generation Failed",
-        description: "Could not reach AI description service."
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+
 
   const toggleStream = () => {
     if (!isStreaming) {
@@ -207,11 +202,15 @@ export default function AuraStream() {
             path: '',
             metadata: {
               artist: currentTrack.artist,
-              genre: 'Electronic',
-              source: 'NCS'
-            },
-            aiDescription: currentTrack.description
-          }} 
+              genre: currentTrack.genre,
+              source: 'NCS',
+              song_name: currentTrack.metadata?.song_name,
+              author: currentTrack.metadata?.author,
+              provider: currentTrack.metadata?.provider,
+              download_stream_url: currentTrack.metadata?.download_stream_url,
+              watch_url: currentTrack.metadata?.watch_url,
+            }
+          }}
         />
 
         {/* Subtle Watermark */}

@@ -14,7 +14,7 @@ export interface TrackInfo {
   id: string;        // slug normalizado do título
   filename: string;  // nome do arquivo .mp3
   path: string;      // caminho absoluto para o arquivo
-  aiDescription?: string | null;
+
   isVerified?: boolean;
   metadata?: {
     title?: string;

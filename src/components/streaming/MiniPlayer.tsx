@@ -7,63 +7,76 @@ interface MiniPlayerProps {
 }
 
 export function MiniPlayer({ currentTrack }: MiniPlayerProps) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [displayTrack, setDisplayTrack] = useState<TrackInfo | null>(currentTrack);
 
   useEffect(() => {
-    if (!currentTrack) {
+    if (!currentTrack || !currentTrack.filename) {
       setIsVisible(false);
       setTimeout(() => setDisplayTrack(null), 200);
       return;
     }
-    
+
+    if (displayTrack?.filename === currentTrack.filename) {
+      // Same track, update instantly to avoid blinking
+      setDisplayTrack(currentTrack);
+      setIsVisible(true);
+      return;
+    }
+
     // Fade out
     setIsVisible(false);
     const timer = setTimeout(() => {
       setDisplayTrack(currentTrack);
       setIsVisible(true); // Fade in
     }, 200);
-    
+
     return () => clearTimeout(timer);
-  }, [currentTrack]); // O currentTrack.id seria melhor se houvesse a garantia de id. Mas currentTrack também serve pois no page ele é atualizado quando muda.
+  }, [currentTrack?.filename]);
 
   if (!displayTrack) return null;
 
   return (
     <div className={`miniplayer-glow ${isVisible ? 'miniplayer-enter' : 'opacity-0 scale-95 pointer-events-none'}`} style={{
       position: 'fixed',
-      bottom: '20px',
-      right: '20px',
-      width: '280px',
-      height: '140px',
+      bottom: '80px',
+      right: '40px',
+      width: '420px',
+      height: '240px',
       background: 'rgba(2, 6, 23, 0.85)',
       backdropFilter: 'blur(8px)',
-      borderTop: '2px solid #7C3AED',
-      borderRadius: '8px',
-      padding: '12px 16px',
-      pointerEvents: 'none', // passivo
+      borderTop: '3px solid #7C3AED',
+      borderRadius: '12px',
+      padding: '20px 24px',
+      pointerEvents: 'none',
       zIndex: 100,
       overflow: 'hidden',
       transition: 'opacity 200ms ease-out, transform 200ms ease-out',
     }}>
-      <div style={{ fontFamily: 'var(--font-outfit)', fontWeight: 700, fontSize: '14px', color: '#FFFFFF', 
+      <div style={{ fontFamily: 'var(--font-outfit)', fontWeight: 900, fontSize: '21px', color: '#FFFFFF',
                     overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-        {displayTrack.filename.replace(/\.mp3$/i, '')}
+        {displayTrack.metadata?.song_name || displayTrack.filename.replace(/\.mp3$/i, '')}
       </div>
-      <div style={{ fontSize: '12px', color: '#94A3B8', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-        {displayTrack.metadata?.artist ?? 'Unknown Artist'}
+      <div style={{ fontWeight: 700, fontSize: '18px', color: '#94A3B8', marginTop: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        {displayTrack.metadata?.author || displayTrack.metadata?.artist || 'Unknown Artist'}
       </div>
-      <div style={{ fontSize: '10px', color: '#7C3AED', marginTop: '2px' }}>
-        {displayTrack.metadata?.genre ?? ''}
+      <div style={{ fontWeight: 600, fontSize: '15px', color: '#7C3AED', marginTop: '6px' }}>
+        {displayTrack.metadata?.provider || displayTrack.metadata?.genre || ''}
       </div>
-      {displayTrack.aiDescription && (
-        <div style={{
-          fontSize: '9px', fontStyle: 'italic', color: '#94A3B8', marginTop: '6px',
-          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-        }}>
-          {displayTrack.aiDescription}
-        </div>
-      )}
+
+      <div style={{ marginTop: '16px', borderTop: '2px solid rgba(255,255,255,0.05)', paddingTop: '12px' }}>
+        {displayTrack.metadata?.watch_url && (
+          <div style={{ fontWeight: 500, fontSize: '14px', color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '4px' }}>
+            <span style={{ color: '#EF4444', marginRight: '6px' }}>▶</span> {displayTrack.metadata.watch_url.replace(/https?:\/\//, '')}
+          </div>
+        )}
+        {displayTrack.metadata?.download_stream_url && (
+          <div style={{ fontWeight: 500, fontSize: '14px', color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span style={{ color: '#3B82F6', marginRight: '6px' }}>⬇</span> {displayTrack.metadata.download_stream_url.replace(/https?:\/\//, '')}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }

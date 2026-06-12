@@ -6,7 +6,7 @@ import { loadAudioQueue } from './queue';
 import { startStream, stopStream, cancelReconnect, restartStream } from './stream';
 import { startAudioWatcher, startMetadataWatcher } from './watcher';
 import { parseMetadata, validateTrack, auditLog } from './compliance';
-import { generateAllDescriptions } from './ai-description';
+
 
 const PORT = 9003;
 const wss = new WebSocketServer({ port: PORT });
@@ -17,7 +17,7 @@ wss.on('listening', () => {
   console.log(`[server] WS listening on ws://localhost:${PORT}`);
   parseMetadata();
   loadAudioQueue();
-  generateAllDescriptions();
+
   startAudioWatcher();
   startMetadataWatcher();
 });
