@@ -16,7 +16,12 @@ cleanup() {
 trap cleanup EXIT
 
 echo -e "${GREEN}[1/3] Iniciando Servidor WebSocket (Backend)...${NC}"
-yarn server &
+if [ -z "$DISPLAY" ] && command -v xvfb-run >/dev/null 2>&1; then
+    echo -e "${YELLOW}⚠️ Sem DISPLAY detectado. Iniciando servidor com Xvfb (Virtual Framebuffer)...${NC}"
+    xvfb-run -a --server-args="-screen 0 1920x1080x24" yarn server &
+else
+    yarn server &
+fi
 SERVER_PID=$!
 
 echo -e "${GREEN}[2/3] Iniciando Servidor Genkit (IA)...${NC}"

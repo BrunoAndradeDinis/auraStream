@@ -42,6 +42,7 @@ sudo apt-get install -y \
   libgbm1 \
   libxshmfence1 \
   x11-xkb-utils \
+  x11-utils \
   xfonts-100dpi \
   xfonts-75dpi \
   xfonts-scalable \

@@ -128,10 +128,24 @@ async function handleAction(action: string): Promise<void> {
     }
 
     default: {
-      console.log(chalk.yellow('[Connecting to server...]'));
+      const isStreamCmd = ['media:start_stream', 'media:stop_stream', 'media:restart_stream'].includes(action);
+      if (isStreamCmd) {
+        console.log(chalk.yellow('\n⏳ Enviando comando ao servidor... (aguardando até 10s)'));
+      }
       const result = await sendCommand(action);
       if (!result) { showServerError(); break; }
-      console.log(chalk.green(`✓ Command '${action}' executed. Status: ${(result as any).status}`));
+      const status = (result as any).status ?? 'unknown';
+      const track = (result as any).currentTrack?.filename;
+      if (action === 'media:start_stream') {
+        console.log(chalk.green(`\n✅ Stream iniciado!`));
+        console.log(chalk.cyan(`   Status : ${status}`));
+        if (track) console.log(chalk.cyan(`   Track  : ${track}`));
+        console.log(chalk.gray('   O FFmpeg está rodando em background. Verifique os logs do servidor.'));
+      } else if (action === 'media:stop_stream') {
+        console.log(chalk.green(`\n✅ Stream encerrado. Status: ${status}`));
+      } else {
+        console.log(chalk.green(`\n✅ Comando '${action}' executado. Status: ${status}`));
+      }
       await pause();
       break;
     }
@@ -140,7 +154,11 @@ async function handleAction(action: string): Promise<void> {
 }
 
 function showServerError(): void {
-  console.log(chalk.red('[ERROR] Server not running. Start with: npm run server'));
+  console.log(chalk.red('\n❌ ERRO: Servidor não está rodando!'));
+  console.log(chalk.yellow('   Inicie o servidor em outro terminal com:'));
+  console.log(chalk.cyan('     ./start-dev.sh'));
+  console.log(chalk.gray('   ou apenas o backend:'));
+  console.log(chalk.cyan('     xvfb-run -a --server-args="-screen 0 1920x1080x24" yarn server'));
 }
 
 async function pause(): Promise<void> {

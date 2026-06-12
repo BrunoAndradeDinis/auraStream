@@ -82,20 +82,25 @@ wss.on('connection', (ws: WebSocket) => {
         broadcast();
         broadcastEvent('media:play', {});
         break;
-      case 'media:start_stream':
-        if (!state.streamKey) {
+      case 'media:start_stream': {
+        const keyToUse = state.streamKey || process.env.YOUTUBE || process.env.YOUTUBE_STREAM_KEY;
+        if (!keyToUse) {
           sendToClient(ws, 'server:error', 'stream_key_missing');
-          return;
+          break;
         }
-        startStream(state.streamKey).catch((err) => {
-          console.error('[server] falha ao iniciar stream:', err);
-          sendToClient(ws, 'server:error', 'stream_start_failed');
-        });
         if (!state.currentTrack) advanceToNextValidTrack(null);
         setState({ status: 'streaming' });
         broadcast();
         broadcastEvent('media:play', {});
+        // Confirma para o CLI antes de iniciar o FFmpeg (que pode demorar)
+        const { streamKey: _sk1, ...safeState1 } = state;
+        sendToClient(ws, 'server:state_sync', safeState1);
+        startStream(keyToUse).catch((err) => {
+          console.error('[server] falha ao iniciar stream:', err.message ?? err);
+          sendToClient(ws, 'server:error', 'stream_start_failed: ' + (err.message ?? String(err)));
+        });
         break;
+      }
       case 'media:pause':
         setState({ status: 'paused' });
         broadcast();
@@ -107,16 +112,18 @@ wss.on('connection', (ws: WebSocket) => {
         setState({ status: 'idle' });
         broadcast();
         broadcastEvent('media:pause', {});
+        { const { streamKey: _sk2, ...safeState2 } = state; sendToClient(ws, 'server:state_sync', safeState2); }
         break;
       case 'media:restart_stream':
         if (!state.streamKey) {
           sendToClient(ws, 'server:error', 'stream_key_missing');
-          return;
+          break;
         }
         if (!state.currentTrack) advanceToNextValidTrack(null);
         setState({ status: 'streaming' });
         broadcast();
         broadcastEvent('media:play', {});
+        { const { streamKey: _sk3, ...safeState3 } = state; sendToClient(ws, 'server:state_sync', safeState3); }
         await restartStream(state.streamKey);
         break;
       case 'config:stream_key': {

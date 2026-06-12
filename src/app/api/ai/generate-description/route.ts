@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { gemini15Pro, googleAI } from '@genkit-ai/googleai'
+import { googleAI } from '@genkit-ai/google-genai'
 import { genkit } from 'genkit'
 
 const ai = genkit({
   plugins: [googleAI({ apiKey: process.env.GEMINI_API_KEY })],
-  model: gemini15Pro,
+  model: 'googleai/gemini-2.5-flash',
 });
 
 interface TrackMetadata {
@@ -15,9 +15,17 @@ interface TrackMetadata {
 
 export async function POST(request: NextRequest) {
   try {
-    const body: TrackMetadata = await request.json()
+    let body: TrackMetadata;
+    try {
+      body = await request.json();
+    } catch (err) {
+      return NextResponse.json(
+        { error: 'Invalid or empty JSON body' },
+        { status: 400 }
+      );
+    }
 
-    if (!body.title || !body.artist || !body.genre) {
+    if (!body || !body.title || !body.artist || !body.genre) {
       return NextResponse.json(
         { error: 'Missing required fields: title, artist, genre' },
         { status: 400 },

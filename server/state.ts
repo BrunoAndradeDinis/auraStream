@@ -27,6 +27,12 @@ function loadState(): AppState {
     console.warn('[server] failed to load state cache, using defaults:', (err as Error).message);
   }
 
+  // Reseta status transientes — FFmpeg não sobrevive ao reinício
+  const transientStatuses = ['streaming', 'reconnecting', 'paused', 'compliance_blocked'];
+  if (transientStatuses.includes(state.status)) {
+    state.status = 'idle';
+  }
+
   // Fallback via env — nunca logar o valor
   if (process.env.YOUTUBE_STREAM_KEY) {
     state.streamKey = process.env.YOUTUBE_STREAM_KEY;
