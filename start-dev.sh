@@ -16,15 +16,15 @@ cleanup() {
 trap cleanup EXIT
 
 echo -e "${GREEN}[1/3] Iniciando Servidor WebSocket (Backend)...${NC}"
-npm run server &
+yarn server &
 SERVER_PID=$!
 
 echo -e "${GREEN}[2/3] Iniciando Servidor Genkit (IA)...${NC}"
-npm run genkit:dev &
+yarn genkit:dev &
 GENKIT_PID=$!
 
 echo -e "${GREEN}[3/3] Iniciando Next.js (Frontend)...${NC}"
-npm run dev &
+yarn dev &
 NEXT_PID=$!
 
 echo -e "\n${CYAN}✅ Todos os serviços estão a correr!${NC}"
