@@ -1,9 +1,11 @@
 import { spawn, execSync, ChildProcess } from 'child_process';
 import path from 'path';
+import puppeteer, { Browser } from 'puppeteer';
 import { state, setState } from './state';
 import { broadcast, broadcastEvent } from './broadcast';
 
 let ffmpegProcess: ChildProcess | null = null;
+let activeBrowser: Browser | null = null;
 
 let reconnectAttempts = 0;
 const MAX_ATTEMPTS = 5;
@@ -100,6 +102,53 @@ function buildFFmpegArgs(rtmpUrl: string, audioPath: string): string[] {
   ];
 }
 
+/**
+ * Ensures a Chrome browser is running in the X11 display, pointing to our dashboard.
+ * Without this, x11grab would just capture a black screen.
+ */
+async function ensureBrowserReady(): Promise<void> {
+  if (activeBrowser) return;
+
+  console.log('[stream] Launching browser to render UI on Xvfb...');
+  try {
+    activeBrowser = await puppeteer.launch({
+      executablePath: await puppeteer.executablePath(),
+      headless: false, // MUST be false to render on Xvfb
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--autoplay-policy=no-user-gesture-required',
+        '--start-fullscreen',
+        '--kiosk',
+        '--window-position=0,0',
+        '--window-size=1920,1080',
+        '--hide-scrollbars',
+        '--disable-infobars'
+      ],
+      defaultViewport: { width: 1920, height: 1080 }
+    });
+
+    const page = await activeBrowser.newPage();
+    await page.setViewport({ width: 1920, height: 1080 });
+    
+    // The UI must be running on localhost:9002
+    await page.goto('http://localhost:9002/', {
+      waitUntil: 'networkidle2',
+      timeout: 60000
+    });
+    console.log('[stream] Browser is ready and displaying UI.');
+  } catch (err) {
+    console.error('[stream] Error launching browser:', (err as Error).message);
+    if (activeBrowser) {
+      await activeBrowser.close().catch(() => {});
+      activeBrowser = null;
+    }
+    throw err;
+  }
+}
+
 export async function startStream(streamKey: string): Promise<void> {
   if (ffmpegProcess) {
     console.warn('[stream] FFmpeg process already running');
@@ -113,6 +162,9 @@ export async function startStream(streamKey: string): Promise<void> {
   if (!audioPath) {
     throw new Error('No track in queue to stream audio from');
   }
+
+  // Ensure UI is being rendered on the virtual display BEFORE starting capture
+  await ensureBrowserReady();
 
   const rtmpUrl = `rtmp://a.rtmp.youtube.com/live2/${streamKey}`;
   const args = buildFFmpegArgs(rtmpUrl, audioPath);
@@ -260,6 +312,12 @@ export async function stopStream(skipCancel = false): Promise<void> {
   }
 
   if (!skipCancel) {
+    if (activeBrowser) {
+      await activeBrowser.close().catch(() => {});
+      activeBrowser = null;
+      console.log('[stream] Browser closed');
+    }
+
     activeStreamKey = null;
     setState({ status: 'offline' });
     broadcast();
