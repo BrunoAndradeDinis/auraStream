@@ -168,7 +168,12 @@ export default function AuraStream() {
   };
 
   useEffect(() => {
-    if (!audioEnabled) {
+    // Prevent the Puppeteer streaming client from playing audio,
+    // as it consumes massive memory for decoding MP3s and the server already streams the audio directly.
+    const isStreamClient = typeof window !== 'undefined' && 
+      new URLSearchParams(window.location.search).get('stream_client') === 'true';
+
+    if (!audioEnabled && !isStreamClient) {
       init();
       setAudioEnabled(true);
     }

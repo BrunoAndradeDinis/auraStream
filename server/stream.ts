@@ -132,9 +132,7 @@ async function ensureBrowserReady(): Promise<void> {
         '--hide-scrollbars',
         '--disable-infobars',
         '--disable-accelerated-video-decode',
-        '--disable-features=AudioServiceOutOfProcess',
-        '--js-flags="--max-old-space-size=512"',
-        '--memory-pressure-off'
+        '--disable-features=AudioServiceOutOfProcess'
       ],
       defaultViewport: { width: 1920, height: 1080 }
     });
@@ -143,7 +141,7 @@ async function ensureBrowserReady(): Promise<void> {
     await page.setViewport({ width: 1920, height: 1080 });
     
     // The UI must be running on localhost:9002
-    await page.goto('http://localhost:9002/', {
+    await page.goto('http://localhost:9002/?stream_client=true', {
       waitUntil: 'networkidle2',
       timeout: 60000
     });
