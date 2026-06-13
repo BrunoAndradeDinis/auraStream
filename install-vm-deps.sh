@@ -49,7 +49,18 @@ sudo apt-get install -y \
   xfonts-cyrillic \
   x11-apps \
   fonts-liberation \
-  xdg-utils
+  xdg-utils \
+  libcups2 \
+  libdrm2 \
+  libxcomposite1 \
+  libxdamage1 \
+  libxrandr2 \
+  libxcb-dri3-0
+
+echo "========================================"
+echo " Concedendo permissão de execução aos scripts..."
+echo "========================================"
+chmod +x start-dev.sh start-build.sh install-vm-deps.sh
 
 echo "========================================"
 echo " Instalando as dependências do projeto..."
@@ -61,12 +72,13 @@ echo " Instalação concluída com sucesso!"
 echo "================================================="
 echo "IMPORTANTE:"
 echo "Como a aplicação usa Puppeteer em modo 'headless: false' (necessário para gravação de áudio/vídeo da aba),"
-echo "é obrigatório rodar o projeto dentro do Xvfb na VM para emular um display."
+echo "é obrigatório o uso do Xvfb na VM para emular um display."
 echo ""
-echo "Exemplo de como iniciar:"
-echo "  xvfb-run -a yarn cli"
-echo "ou para o servidor:"
-echo "  xvfb-run -a yarn server"
+echo "Como iniciar o AuraStream v2.0:"
+echo "  ./start-dev.sh   (Para ambiente de desenvolvimento)"
+echo "  ./start-build.sh (Para ambiente de produção)"
 echo ""
-echo "Certifique-se de que o arquivo .env contém a chave de transmissão do YouTube."
+echo "Nota: Estes scripts já vêm configurados para rodar o backend com xvfb-run automaticamente caso seja necessário."
+echo ""
+echo "Certifique-se de que o arquivo .env está configurado corretamente."
 echo "================================================="
