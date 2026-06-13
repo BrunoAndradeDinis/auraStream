@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { TrackMetadata } from './types';
 
-const DETAILS_PATH = path.join(process.cwd(), 'src', 'assets', 'details', 'music details.txt');
+const DETAILS_PATH = path.join(process.cwd(), 'src', 'assets', 'details', 'music-details.json');
 
 // Cache em memória — substituído atomicamente a cada parseMetadata()
 let metadataCache: Map<string, TrackMetadata> = new Map();
@@ -19,33 +19,24 @@ export function parseMetadata(): Map<string, TrackMetadata> {
     }
     
     const content = fs.readFileSync(DETAILS_PATH, 'utf-8');
-    const blocks = content.split(/^---$/m).map((b) => b.trim()).filter(Boolean);
+    const data = JSON.parse(content);
     const result = new Map<string, TrackMetadata>();
-    let lineOffset = 0;
 
-    for (const block of blocks) {
-      const titleMatch = block.match(/^(?:Song|M[úu]sica):\s*(.+)$/im);
-      if (!titleMatch) {
-        console.warn(`[compliance] skipped malformed block at line ~${lineOffset}`);
-        lineOffset += block.split('\n').length + 1;
-        continue;
-      }
-
-      const title = titleMatch[1].trim();
-      const artistMatch = block.match(/^(?:Music provided by|M[úu]sica fornecida por)\s*(.+)$/im);
-      const downloadMatch = block.match(/^(?:Free Download\/Stream:|Download(?:\/Streaming)? gratuito:)\s*(.+)$/im);
-      const watchMatch = block.match(/^(?:Watch:|Assista:)\s*(.+)$/im);
-
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      if (!item.song || !item.song.song_name) continue;
+      
+      const title = item.song.song_name;
       const metadata: TrackMetadata = {
         title,
-        artist: artistMatch?.[1].trim() ?? 'Unknown',
-        source: artistMatch?.[1].trim() ?? '',
-        downloadLink: downloadMatch?.[1].trim() ?? '',
-        watchLink: watchMatch?.[1].trim() ?? '',
+        artist: item.song.author ?? 'Unknown',
+        source: item.provider ?? '',
+        downloadLink: item.download_stream_url ?? '',
+        watchLink: item.watch_url ?? '',
       };
 
-      result.set(slugify(title), metadata);
-      lineOffset += block.split('\n').length + 1;
+      // We'll use a unique key for the map (like index) but matching will iterate over values
+      result.set(`track-${i}`, metadata);
     }
 
     metadataCache = result; // substituição atômica
@@ -65,10 +56,14 @@ import { ValidationResult } from './types';
 
 export function validateTrack(trackId: string): ValidationResult {
   const cache = getMetadataCache();
-  const metadata = cache.get(trackId);
-  if (metadata) {
-    return { valid: true, metadata };
+  
+  for (const metadata of cache.values()) {
+    const nameToMatch = metadata.title.split(' (')[0].split(' [')[0].toLowerCase().replace(/\s+/g, '-');
+    if (trackId.includes(nameToMatch)) {
+      return { valid: true, metadata };
+    }
   }
+  
   return { valid: false, reason: 'not_in_whitelist' };
 }
 
