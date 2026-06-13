@@ -41,7 +41,7 @@ export function MiniPlayer({ currentTrack }: MiniPlayerProps) {
       position: 'fixed',
       bottom: '80px',
       right: '40px',
-      width: '420px',
+      width: '480px',
       height: '240px',
       background: 'rgba(2, 6, 23, 0.85)',
       backdropFilter: 'blur(8px)',
@@ -66,12 +66,12 @@ export function MiniPlayer({ currentTrack }: MiniPlayerProps) {
 
       <div style={{ marginTop: '16px', borderTop: '2px solid rgba(255,255,255,0.05)', paddingTop: '12px' }}>
         {displayTrack.metadata?.watch_url && (
-          <div style={{ fontWeight: 500, fontSize: '14px', color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '4px' }}>
+          <div style={{ fontWeight: 500, fontSize: '21px', color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '4px' }}>
             <span style={{ color: '#EF4444', marginRight: '6px' }}>▶</span> {displayTrack.metadata.watch_url.replace(/https?:\/\//, '')}
           </div>
         )}
         {displayTrack.metadata?.download_stream_url && (
-          <div style={{ fontWeight: 500, fontSize: '14px', color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <div style={{ fontWeight: 500, fontSize: '21px', color: '#94A3B8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             <span style={{ color: '#3B82F6', marginRight: '6px' }}>⬇</span> {displayTrack.metadata.download_stream_url.replace(/https?:\/\//, '')}
           </div>
         )}

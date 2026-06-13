@@ -8,7 +8,15 @@ export const AuroraBackground: React.FC = () => {
       className="fixed inset-0 w-full h-full bg-slate-950 overflow-hidden" 
       style={{ zIndex: 0 }} 
     >
-      <div className="absolute top-0 left-0 w-full h-full opacity-60">
+      <video
+        src="/video-background.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+      />
+      <div className="absolute top-0 left-0 w-full h-full opacity-60 z-10">
         {/* Cyan Blob */}
         <div 
           className="absolute top-[20%] left-[20%] w-[50vw] h-[50vw] rounded-full mix-blend-screen opacity-50"
