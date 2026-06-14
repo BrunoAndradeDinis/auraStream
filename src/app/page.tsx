@@ -21,6 +21,7 @@ interface Track {
     provider?: string;
     download_stream_url?: string;
     watch_url?: string;
+    album_image?: string;
   };
 }
 
@@ -86,7 +87,8 @@ export default function AuraStream() {
               author: matchedDetail ? matchedDetail.song.author : undefined,
               provider: matchedDetail ? matchedDetail.provider : undefined,
               download_stream_url: matchedDetail ? matchedDetail.download_stream_url : undefined,
-              watch_url: matchedDetail ? matchedDetail.watch_url : undefined
+              watch_url: matchedDetail ? matchedDetail.watch_url : undefined,
+              album_image: matchedDetail ? matchedDetail.album_image : undefined
             }
           };
         });
@@ -186,19 +188,6 @@ export default function AuraStream() {
 
       {/* Live Feed View (The part that actually gets captured) */}
       <div className="flex-1 relative pointer-events-none">
-        {/* Stream Info Indicator (Top Left) */}
-        <div className="absolute top-8 left-8 flex items-center gap-4 animate-fade-in-up">
-           <div className="flex flex-col">
-              <span className="text-white font-headline font-bold text-lg tracking-tighter">AuraStream HD</span>
-              <div className="flex items-center gap-2">
-                <span className={`flex h-1.5 w-1.5 rounded-full ${isStreaming ? 'bg-primary' : 'bg-gray-500'}`} />
-                <span className={`text-[10px] font-bold uppercase tracking-widest ${isStreaming ? 'text-primary' : 'text-gray-500'}`}>
-                  {isStreaming ? 'Live Pipeline Active' : 'Pipeline Idle'}
-                </span>
-              </div>
-           </div>
-        </div>
-
         {/* The Visual Miniplayer Overlay */}
         <MiniPlayer 
           currentTrack={{
@@ -214,17 +203,10 @@ export default function AuraStream() {
               provider: currentTrack.metadata?.provider,
               download_stream_url: currentTrack.metadata?.download_stream_url,
               watch_url: currentTrack.metadata?.watch_url,
+              album_image: currentTrack.metadata?.album_image,
             }
           }}
         />
-
-        {/* Subtle Watermark */}
-        <div className="absolute top-8 right-8 opacity-20 hover:opacity-100 transition-opacity cursor-default select-none">
-          <p className="text-[10px] font-mono text-white text-right">
-            BROADCAST NODE: VM-E82-LATAM<br/>
-            BITRATE: 6500 KBPS / H.264
-          </p>
-        </div>
       </div>
     </main>
   );

@@ -16,6 +16,7 @@ export interface TrackInfo {
     provider?: string;
     download_stream_url?: string;
     watch_url?: string;
+    album_image?: string;
   };
 }
 

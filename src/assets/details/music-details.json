@@ -6,7 +6,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/c_pullmedown",
-    "watch_url": "http://ncs.lnk.to/c_pullmedownAT/youtube"
+    "watch_url": "http://ncs.lnk.to/c_pullmedownAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/823d4bdf-1d11-487c-9179-0b8ad0abaa29/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -15,7 +16,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/justthewayitgoes",
-    "watch_url": "http://ncs.lnk.to/justthewayitgoesAT/youtube"
+    "watch_url": "http://ncs.lnk.to/justthewayitgoesAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/24afd964-5170-4905-9c80-2f1c8d926e03/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -24,7 +26,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/TS_sunrise",
-    "watch_url": "http://ncs.lnk.to/TS_sunriseAT/youtube"
+    "watch_url": "http://ncs.lnk.to/TS_sunriseAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/c4b4661a-1bd0-4bef-b6a9-868f07374ea2/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -33,7 +36,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/shadowglow",
-    "watch_url": "http://ncs.lnk.to/shadowglowAT/youtube"
+    "watch_url": "http://ncs.lnk.to/shadowglowAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/189b32c8-6fc3-4e1e-95b2-d2938ba24c84/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -42,7 +46,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/allweveeverknown",
-    "watch_url": "http://ncs.lnk.to/allweveeverknownAT/youtube"
+    "watch_url": "http://ncs.lnk.to/allweveeverknownAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/0f58773f-f8d0-404b-8249-09869c90bcc8/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -51,7 +56,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/akina",
-    "watch_url": "http://ncs.lnk.to/akinaAT/youtube"
+    "watch_url": "http://ncs.lnk.to/akinaAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/a0bb52c9-c0a3-4f2f-b3ca-e0b5d0610743/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -60,16 +66,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/Overheat",
-    "watch_url": "http://ncs.lnk.to/OverheatAT/youtube"
-  },
-  {
-    "song": {
-      "author": "Cartoon, Siimi, Karl Killing",
-      "song_name": "Overheat (feat. Blooom)"
-    },
-    "provider": "NoCopyrightSounds",
-    "download_stream_url": "http://ncs.io/Overheat",
-    "watch_url": "http://ncs.lnk.to/OverheatAT/youtube"
+    "watch_url": "http://ncs.lnk.to/OverheatAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/e2791ece-cd95-4f8b-838d-3d2769b91a05/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -78,7 +76,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/DoItAll",
-    "watch_url": "http://ncs.lnk.to/DoItAllAT/youtube"
+    "watch_url": "http://ncs.lnk.to/DoItAllAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/588baf08-2bf0-4ce8-9c59-2f051e29a4ef/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -87,7 +86,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/Whiplash",
-    "watch_url": "http://ncs.lnk.to/WhiplashAT/youtube"
+    "watch_url": "http://ncs.lnk.to/WhiplashAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/c4c6b9ae-0f36-49af-9aac-cd8b07f320fc/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -96,7 +96,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/Spicy",
-    "watch_url": "http://ncs.lnk.to/SpicyAT/youtube"
+    "watch_url": "http://ncs.lnk.to/SpicyAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/de1f7c13-b9b2-4cb3-8fb7-d63bb1485c51/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -105,7 +106,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/Dependant",
-    "watch_url": "http://ncs.lnk.to/DependantAT/youtube"
+    "watch_url": "http://ncs.lnk.to/DependantAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/4cafb063-6bab-41ba-99fc-f2bf57689bdc/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -114,7 +116,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/C_euphoria",
-    "watch_url": "http://ncs.lnk.to/C_euphoriaAT/youtube"
+    "watch_url": "http://ncs.lnk.to/C_euphoriaAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/2ce7d596-d79f-4568-8fcf-effdf7465e12/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -122,8 +125,9 @@
       "song_name": "On My Mind"
     },
     "provider": "NoCopyrightSounds",
-    "download_stream_url": "http://ncs.io/TS\\_OnMyMind",
-    "watch_url": "http://ncs.lnk.to/TS\\_OnMyMindAT/youtube"
+    "download_stream_url": "http://ncs.io/TS_OnMyMind",
+    "watch_url": "http://ncs.lnk.to/TS_OnMyMindAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/ebe9a629-1a5f-4ae5-8061-4b7734bfcd70/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -132,7 +136,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/waitawhile",
-    "watch_url": "http://ncs.lnk.to/waitawhileAT/youtube"
+    "watch_url": "http://ncs.lnk.to/waitawhileAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/c29df480-ce29-49ef-9115-2ecdc9f18061/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -141,7 +146,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/AroundUs",
-    "watch_url": "http://ncs.lnk.to/AroundUsAT/youtube"
+    "watch_url": "http://ncs.lnk.to/AroundUsAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/b851432d-522f-4f38-9078-9908bc204ffa/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -150,7 +156,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/LikeFire",
-    "watch_url": "http://ncs.lnk.to/LikeFireAT/youtube"
+    "watch_url": "http://ncs.lnk.to/LikeFireAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/15e261b5-7d41-49d8-b190-cd78c0b835ac/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -159,7 +166,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/T__Alive",
-    "watch_url": "http://ncs.lnk.to/T_AliveAT/youtube"
+    "watch_url": "http://ncs.lnk.to/T_AliveAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/cf51633e-df1b-4240-8949-458842af94a2/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -168,7 +176,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/SoGood",
-    "watch_url": "http://ncs.lnk.to/SoGoodAT/youtube"
+    "watch_url": "http://ncs.lnk.to/SoGoodAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/a4a88981-db26-4661-8c46-6b28a10ce455/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -177,7 +186,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/MadeForTheGame",
-    "watch_url": "http://ncs.lnk.to/MadeForTheGameAT/youtube"
+    "watch_url": "http://ncs.lnk.to/MadeForTheGameAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/df005766-f3b9-4bb3-8a70-866bf16a4a47/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -186,7 +196,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/FadingLight",
-    "watch_url": "http://ncs.lnk.to/FadingLightAT/youtube"
+    "watch_url": "http://ncs.lnk.to/FadingLightAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/2c034b96-c133-4d86-ac48-8fb12ffbadeb/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -195,7 +206,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/MoveLikeThis",
-    "watch_url": "http://ncs.lnk.to/MoveLikeThisAT/youtube"
+    "watch_url": "http://ncs.lnk.to/MoveLikeThisAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/9b6bc799-86a0-4ec7-b410-e0e642d0a572/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -204,7 +216,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/BounceOnDaRiddim",
-    "watch_url": "http://ncs.lnk.to/BounceOnDaRiddimAT/youtube"
+    "watch_url": "http://ncs.lnk.to/BounceOnDaRiddimAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/2a103382-29c2-436d-9046-267879b1e06d/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -213,7 +226,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/CarryOn",
-    "watch_url": "http://ncs.lnk.to/CarryOnAT/youtube"
+    "watch_url": "http://ncs.lnk.to/CarryOnAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/c0b09b5c-dc08-4b52-840b-16fd6177abea/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -222,7 +236,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/TN\\_AllOrNothing",
-    "watch_url": "http://ncs.lnk.to/TN\\_AllOrNothingAT/youtube"
+    "watch_url": "http://ncs.lnk.to/TN\\_AllOrNothingAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/6b78c5bc-d485-4058-9272-1dc05674f331/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -231,7 +246,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/DancefloorDreamer",
-    "watch_url": "http://ncs.lnk.to/DancefloorDreamerAT/youtube"
+    "watch_url": "http://ncs.lnk.to/DancefloorDreamerAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/a7fd97fe-6cbf-4f5a-882e-a6f560e16032/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -240,16 +256,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/Lighthouse",
-    "watch_url": "http://ncs.lnk.to/LighthouseAT/youtube"
-  },
-  {
-    "song": {
-      "author": "JJD & Azertion",
-      "song_name": "Lighthouse (feat. PhiloSofie)"
-    },
-    "provider": "NoCopyrightSounds",
-    "download_stream_url": "http://ncs.io/Lighthouse",
-    "watch_url": "http://ncs.lnk.to/LighthouseAT/youtube"
+    "watch_url": "http://ncs.lnk.to/LighthouseAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/8a9c10c5-93eb-440d-9e39-57f06e8a2eb7/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -258,7 +266,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/HIUTTL",
-    "watch_url": "http://ncs.lnk.to/HIUTTLAT/youtube"
+    "watch_url": "http://ncs.lnk.to/HIUTTLAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/c6e22176-a4e7-46aa-9720-c012bf35ec0f/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -267,7 +276,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/BackAgain",
-    "watch_url": "http://ncs.lnk.to/BackAgainAT/youtube"
+    "watch_url": "http://ncs.lnk.to/BackAgainAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/b94aef5c-3505-4451-8e48-dc3027d6707f/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -276,7 +286,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "https://ncs.io/RealGoodLiar",
-    "watch_url": ""
+    "watch_url": "http://ncs.lnk.to/RealGoodLiarAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/a9a54b06-29a3-4da2-b22f-da4a6bfa3a68/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -284,8 +295,9 @@
       "song_name": "Mortals (TOKYO MACHINE & Boom Kitty Remix)"
     },
     "provider": "NoCopyrightSounds",
-    "download_stream_url": "http://ncs.io/Mortals\\_TMBK",
-    "watch_url": "http://ncs.lnk.to/Mortals\\_TMBKAT/youtube"
+    "download_stream_url": "http://ncs.io/Mortals_TMBK",
+    "watch_url": "http://ncs.lnk.to/Mortals_TMBKAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/f996ca49-161e-4a6b-9f44-ab90e585ed4e/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -294,7 +306,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/Change",
-    "watch_url": "http://ncs.lnk.to/ChangeAT/youtube"
+    "watch_url": "http://ncs.lnk.to/ChangeAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/370f855b-df43-40fb-9dfd-4be12f329a85/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -303,7 +316,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/JAMM",
-    "watch_url": "http://ncs.lnk.to/JAMMAT/youtube"
+    "watch_url": "http://ncs.lnk.to/JAMMAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/348aab72-c264-48bb-b36e-cd5a019d16e9/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -312,7 +326,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/LayLow",
-    "watch_url": "http://ncs.lnk.to/LayLowAT/youtube"
+    "watch_url": "http://ncs.lnk.to/LayLowAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/f7affc5a-4aef-4f21-9f11-ed0562db4ce0/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -321,7 +336,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/FeelingsFade",
-    "watch_url": "http://ncs.lnk.to/FeelingsFadeAT/youtube"
+    "watch_url": "http://ncs.lnk.to/FeelingsFadeAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/c52c582b-bbef-4d92-95cd-f1aa274380d6/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -330,16 +346,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/Wanderlust",
-    "watch_url": "http://ncs.lnk.to/WanderlustAT/youtube"
-  },
-  {
-    "song": {
-      "author": "Everen Maxwell",
-      "song_name": "Wanderlust [NCS Release]"
-    },
-    "provider": "NoCopyrightSounds",
-    "download_stream_url": "http://ncs.io/Wanderlust",
-    "watch_url": "http://ncs.lnk.to/WanderlustAT/youtube"
+    "watch_url": "http://ncs.lnk.to/WanderlustAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/e88752bc-3f3a-45d1-be9e-d3a843576b77/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -348,7 +356,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/BeautifulDisaster",
-    "watch_url": "http://ncs.lnk.to/BeautifulDisasterAT/youtube"
+    "watch_url": "http://ncs.lnk.to/BeautifulDisasterAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/daa442b8-951d-4c92-8fa2-216d1e20fbf2/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -356,8 +365,9 @@
       "song_name": "Skyline Pt. II"
     },
     "provider": "NoCopyrightSounds",
-    "download_stream_url": "http://ncs.io/Skyline\\_II",
-    "watch_url": "http://ncs.lnk.to/Skyline\\_IIAT/youtube"
+    "download_stream_url": "http://ncs.io/Skyline_II",
+    "watch_url": "http://ncs.lnk.to/Skyline_IIAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/f3f0e23b-482b-4f63-8ee6-aede76a9b787/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -365,8 +375,9 @@
       "song_name": "Overdrive [NCS Release]"
     },
     "provider": "NoCopyrightSounds",
-    "download_stream_url": "http://ncs.io/A\\_Overdrive",
-    "watch_url": "http://ncs.lnk.to/A\\_OverdriveAT/youtube"
+    "download_stream_url": "http://ncs.io/A_Overdrive",
+    "watch_url": "http://ncs.lnk.to/A_OverdriveAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/9a4b15bb-3a92-4a7d-90a3-ab320db3a37f/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -375,7 +386,8 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/Ocean",
-    "watch_url": "http://ncs.lnk.to/OceanAT/youtube"
+    "watch_url": "http://ncs.lnk.to/OceanAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/0c6dbf4b-ad64-4847-a7d7-4360cb3fc314/artwork-440x440.jpg"
   },
   {
     "song": {
@@ -384,6 +396,207 @@
     },
     "provider": "NoCopyrightSounds",
     "download_stream_url": "http://ncs.io/OTBOD",
-    "watch_url": "http://ncs.lnk.to/OTBODAT/youtube"
+    "watch_url": "http://ncs.lnk.to/OTBODAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/4f53a921-2762-4507-821c-5035069445c2/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Skan",
+      "song_name": "Muscle Up (feat. Drama B & Ryo)"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/MuscleUp",
+    "watch_url": "http://ncs.lnk.to/MuscleUpAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/296b5e44-3237-4a89-b73f-97fa5d481788/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Diamond Eyes",
+      "song_name": "Doxx My Heart"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/DoxxMyHeart",
+    "watch_url": "http://ncs.lnk.to/DoxxMyHeartAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/9adc4305-6616-4391-b9e0-718e6e2d07b5/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Netrum & Halvorsen",
+      "song_name": "Backstreet Boy"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/BackstreetBoy",
+    "watch_url": "http://ncs.lnk.to/BackstreetBoyAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/61252c82-8e68-4c72-b63e-922fe7168f07/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Rex Hooligan",
+      "song_name": "After The End"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/AfterTheEnd",
+    "watch_url": "http://ncs.lnk.to/AfterTheEndAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/33da4227-c7f8-43f7-b7d9-f08f96d3777a/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "NIVIRO",
+      "song_name": "Strobe"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/Strobe",
+    "watch_url": "http://ncs.lnk.to/StrobeAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/5b655e14-691e-437c-83bb-d3a01882c414/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Clarx & SlidV",
+      "song_name": "Severed Rose"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/SeveredRose",
+    "watch_url": "http://ncs.lnk.to/SeveredRoseAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/af4247ef-4784-4a06-9b1e-f07cf951dbae/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "No Hero",
+      "song_name": "On My Mind"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/OnMyMind",
+    "watch_url": "http://ncs.lnk.to/OnMyMindAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/eacd698d-e309-4588-acb3-dc8e00d44d21/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "jeonghyeon, KDH & Lack D",
+      "song_name": "Firestarter"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/Firestarter",
+    "watch_url": "http://ncs.lnk.to/FirestarterAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/b7520c18-c146-4fb6-ad75-0348f362849a/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Janji, Robbie Hutton",
+      "song_name": "Call My Name"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/CallMyName",
+    "watch_url": "http://ncs.lnk.to/CallMyNameAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/1ae44d4e-7d56-41c3-a7a4-9f149f5203c5/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "More Plastic",
+      "song_name": "Obsession"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/Obsession",
+    "watch_url": "http://ncs.lnk.to/ObsessionAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/780db3da-523f-4dbc-85b6-aadbdc8017dc/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Extra Terra & Max Brhon",
+      "song_name": "Cyberblade"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/Cyberblade",
+    "watch_url": "http://ncs.lnk.to/CyberbladeAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/a8a93f64-00bb-4842-9173-d82ee73a6395/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Everen Maxwell",
+      "song_name": "Hinterlands [NCS Release]"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/Hinterlands",
+    "watch_url": "http://ncs.lnk.to/HinterlandsAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/8e9fcf8f-44e4-44b4-9488-a62905a44e1d/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Avi Snow, Sync, Marky Style",
+      "song_name": "Alright (Yvvan Back Remix)"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/Alright_YB",
+    "watch_url": "http://ncs.lnk.to/Alright_YBAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/74e77ef7-a9b9-4d0c-bcc5-54049cbe563b/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Zaug",
+      "song_name": "Notice That"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/NoticeThat",
+    "watch_url": "http://ncs.lnk.to/NoticeThatAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/b950e63d-b5bf-4554-ad99-64bff7789e7c/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "ROY KNOX",
+      "song_name": "Your Poison"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "https://ncs.io/YourPoison",
+    "watch_url": "https://ncs.lnk.to/YourPoisonAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/b2c46257-a11d-41b2-89b6-54c78cac1def/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "NIVIRO",
+      "song_name": "The Riot"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/TheRiot",
+    "watch_url": "http://ncs.lnk.to/TheRiotAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/2cf0dd0d-5ce0-4499-9e56-757a489c565a/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Apollo On The Run",
+      "song_name": "Echo [NCS Release]"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/A_Echo",
+    "watch_url": "http://ncs.lnk.to/A_EchoAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/2d1bf660-873b-4544-822f-a01e52ef100e/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "BAYZY, Sayfro",
+      "song_name": "On and On [NCS Release]"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/BS_OnandOn",
+    "watch_url": "http://ncs.lnk.to/BS_OnandOnAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/92ffbc67-fdd1-46e9-b336-8a2e0297ffce/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Extra Terra & N3b",
+      "song_name": "Silence [NCS Release]"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/EN_Silence",
+    "watch_url": "http://ncs.lnk.to/EN_SilenceAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/c162fb13-8ec5-4560-b47a-485c7da20fff/artwork-440x440.jpg"
+  },
+  {
+    "song": {
+      "author": "Rudeejay & NOYSE",
+      "song_name": "Party Pioneers [NCS Release]"
+    },
+    "provider": "NoCopyrightSounds",
+    "download_stream_url": "http://ncs.io/PartyPioneers",
+    "watch_url": "http://ncs.lnk.to/PartyPioneersAT/youtube",
+    "album_image": "https://linkstorage.linkfire.com/medialinks/images/fe4c1088-5713-4528-b820-acb6cbe78631/artwork-440x440.jpg"
   }
 ]
