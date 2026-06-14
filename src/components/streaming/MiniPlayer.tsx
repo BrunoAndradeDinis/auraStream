@@ -41,10 +41,10 @@ export function MiniPlayer({ currentTrack }: MiniPlayerProps) {
       {displayTrack.metadata?.album_image && (
         <div className={`miniplayer-glow ${isVisible ? 'miniplayer-enter' : 'opacity-0 scale-95 pointer-events-none'}`} style={{
           position: 'fixed',
-          bottom: '340px',
-          right: '40px',
-          width: '480px',
-          height: '480px',
+          bottom: '80px',
+          right: '532px',
+          width: '240px',
+          height: '240px',
           background: 'rgba(2, 6, 23, 0.85)',
           backdropFilter: 'blur(8px)',
           borderTop: '3px solid #7C3AED',
