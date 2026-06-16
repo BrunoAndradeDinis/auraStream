@@ -25,7 +25,6 @@ interface Track {
   };
 }
 
-import musicDetails from '@/assets/details/music-details.json';
 
 export default function AuraStream() {
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -70,25 +69,21 @@ export default function AuraStream() {
       const state = payload;
       if (state.queue && state.queue.length > 0) {
         const mappedTracks = state.queue.map((t: any) => {
-          const matchedDetail = musicDetails.find((d: any) => {
-            const nameToMatch = d.song.song_name.split(' (')[0].split(' [')[0].toLowerCase();
-            return t.filename.toLowerCase().includes(nameToMatch);
-          });
-
           return {
             id: t.id,
             title: t.filename.replace('.mp3', ''),
-            artist: matchedDetail ? matchedDetail.song.author : 'Unknown',
-            genre: matchedDetail ? matchedDetail.provider : 'Unknown',
+            artist: t.metadata?.artist || 'Unknown',
+            genre: t.metadata?.genre || 'Unknown',
             description: '',
             filename: t.filename,
             metadata: {
-              song_name: matchedDetail ? matchedDetail.song.song_name : undefined,
-              author: matchedDetail ? matchedDetail.song.author : undefined,
-              provider: matchedDetail ? matchedDetail.provider : undefined,
-              download_stream_url: matchedDetail ? matchedDetail.download_stream_url : undefined,
-              watch_url: matchedDetail ? matchedDetail.watch_url : undefined,
-              album_image: matchedDetail ? matchedDetail.album_image : undefined
+              source: t.metadata?.source || 'S3',
+              song_name: t.metadata?.song_name,
+              author: t.metadata?.artist,
+              provider: t.metadata?.provider,
+              download_stream_url: t.metadata?.download_stream_url,
+              watch_url: t.metadata?.watch_url,
+              album_image: t.metadata?.album_image
             }
           };
         });

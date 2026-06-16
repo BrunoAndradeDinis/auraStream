@@ -56,7 +56,6 @@
 - **React Day Picker 9.11.3** - Seletor de datas
 - **Recharts 2.15.1** - Biblioteca de gráficos React
 - **Embla Carousel React 8.6.0** - Carrossel
-- **Firebase 11.9.1** - Backend (se utilizado)
 - **dotenv 16.5.0** - Variáveis de ambiente
 - **Patch Package 8.0.0** - Patch de dependências
 

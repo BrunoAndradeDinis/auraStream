@@ -16,10 +16,26 @@ const clients = new Set<WebSocket>();
 wss.on('listening', () => {
   console.log(`[server] WS listening on ws://localhost:${PORT}`);
   parseMetadata();
-  loadAudioQueue();
+  loadAudioQueue().then(() => {
+    console.log('[server] Initial queue loaded');
+  });
 
-  startAudioWatcher();
-  startMetadataWatcher();
+  // Telemetria (Pulsar a cada 10 segundos)
+  setInterval(() => {
+    const telemetryEndpoint = process.env.TELEMETRY_ENDPOINT;
+    if (!telemetryEndpoint) return;
+
+    fetch(telemetryEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        vmId: process.env.ACTIVE_CHANNEL || 'aurastream',
+        channel: process.env.ACTIVE_CHANNEL || 'aurastream',
+        status: state.status,
+        logs: [`Playing: ${state.currentTrack?.filename || 'None'}`, `Queue size: ${state.queue.length}`]
+      })
+    }).catch(() => {});
+  }, 10000);
 });
 
 function advanceToNextValidTrack(currentId: string | null): void {

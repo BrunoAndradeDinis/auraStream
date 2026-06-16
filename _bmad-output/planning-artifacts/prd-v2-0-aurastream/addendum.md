@@ -505,7 +505,7 @@ npm run cli
 ### **v3.0 Vision**
 
 - Multi-user dashboard
-- Cloud state (Firebase/Supabase)
+- Cloud state (Supabase)
 - Mobile companion app
 - AI-powered auto-description for any audio
 - Scheduled streams (calendar)

@@ -12,8 +12,11 @@ export type ValidationResult =
 
 export interface TrackInfo {
   id: string;        // slug normalizado do título
-  filename: string;  // nome do arquivo .mp3
-  path: string;      // caminho absoluto para o arquivo
+  filename: string;  // agora serve como nome de referência
+  path: string;      // agora guarda a URL do s3_audio_url
+  s3_audio_url?: string;
+  s3_video_url?: string;
+  album_image?: string;
 
   isVerified?: boolean;
   metadata?: {
