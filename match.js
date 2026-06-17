@@ -1,5 +1,5 @@
 const fs = require('fs');
-const details = JSON.parse(fs.readFileSync('./src/assets/details/music-details.json', 'utf8'));
+const details = JSON.parse(fs.readFileSync('./src/assets/details/songs.json', 'utf8'));
 const files = fs.readdirSync('./src/assets/audio');
 
 let matched = 0;

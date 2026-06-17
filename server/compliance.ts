@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { TrackMetadata } from './types';
 
-const DETAILS_PATH = path.join(process.cwd(), 'src', 'assets', 'details', 'music-details.json');
+const DETAILS_PATH = path.join(process.cwd(), 'src', 'assets', 'details', 'songs.json');
 
 // Cache em memória — substituído atomicamente a cada parseMetadata()
 let metadataCache: Map<string, TrackMetadata> = new Map();
