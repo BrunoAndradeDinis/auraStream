@@ -58,9 +58,66 @@ sudo apt-get install -y \
   libxcb-dri3-0
 
 echo "========================================"
+echo " Instalando tmux e netcat (necessários para Autostart)..."
+echo "========================================"
+sudo apt-get install -y tmux netcat-openbsd
+
+echo "========================================"
+echo " Configurando Autostart na inicialização da VM..."
+echo "========================================"
+cat << 'EOF' > autostart.sh
+#!/bin/bash
+source ~/.bashrc
+
+cd /home/ubuntu/auraStream || exit 1
+
+# Aguarda a rede e processos do sistema inicializarem (útil para o boot)
+sleep 10
+
+# Remove sessão anterior do tmux se existir
+tmux kill-session -t aura 2>/dev/null
+
+# Inicia uma nova sessão tmux em background rodando o start-build com login shell
+tmux new-session -d -s aura 'bash -lc ./start-build.sh'
+
+# Cria uma nova janela para o CLI
+tmux new-window -t aura -n cli 'bash -l'
+
+# Aguarda até que a porta 9003 (Backend WebSocket) esteja aberta
+echo "Aguardando o backend iniciar na porta 9003..."
+while ! nc -z localhost 9003; do
+  sleep 2
+done
+
+# Tempo adicional para garantir que o Next.js e o backend estejam 100% prontos
+sleep 5
+
+# Envia o comando para rodar o yarn cli na janela do CLI
+tmux send-keys -t aura:cli "yarn cli" Enter
+
+# Aguarda o menu do CLI carregar
+sleep 6
+
+# Envia a tecla Enter para selecionar a primeira opção ('▶  Start Streaming')
+tmux send-keys -t aura:cli Enter
+EOF
+
+echo "========================================"
 echo " Concedendo permissão de execução aos scripts..."
 echo "========================================"
-chmod +x start-dev.sh start-build.sh install-vm-deps.sh
+chmod +x start-dev.sh start-build.sh install-vm-deps.sh autostart.sh
+
+echo "========================================"
+echo " Adicionando autostart.sh ao crontab..."
+echo "========================================"
+# Pega o caminho absoluto do diretório atual
+CURRENT_DIR=$(pwd)
+if ! crontab -l 2>/dev/null | grep -q "autostart.sh"; then
+  (crontab -l 2>/dev/null; echo "@reboot $CURRENT_DIR/autostart.sh >> $CURRENT_DIR/logs/autostart.log 2>&1") | crontab -
+  echo "✔ Autostart adicionado ao crontab com sucesso!"
+else
+  echo "✔ Autostart já estava configurado no crontab."
+fi
 
 echo "========================================"
 echo " Instalando as dependências do projeto..."
@@ -74,11 +131,11 @@ echo "IMPORTANTE:"
 echo "Como a aplicação usa Puppeteer em modo 'headless: false' (necessário para gravação de áudio/vídeo da aba),"
 echo "é obrigatório o uso do Xvfb na VM para emular um display."
 echo ""
-echo "Como iniciar o AuraStream v2.0:"
+echo "Como iniciar o AuraStream v2.0 manualmente:"
 echo "  ./start-dev.sh   (Para ambiente de desenvolvimento)"
 echo "  ./start-build.sh (Para ambiente de produção)"
 echo ""
-echo "Nota: Estes scripts já vêm configurados para rodar o backend com xvfb-run automaticamente caso seja necessário."
-echo ""
-echo "Certifique-se de que o arquivo .env está configurado corretamente."
+echo "Nota: O script autostart.sh foi gerado e adicionado ao cron."
+echo "Na próxima vez que a VM reiniciar, o projeto iniciará e fará o stream automaticamente!"
+echo "Para monitorar o processo rodando no boot, use: tmux attach -t aura"
 echo "================================================="
