@@ -15,6 +15,7 @@ interface Track {
   genre: string;
   description: string;
   filename?: string;
+  s3_video_url?: string;
   metadata?: {
     song_name?: string;
     author?: string;
@@ -76,6 +77,7 @@ export default function AuraStream() {
             genre: t.metadata?.genre || 'Unknown',
             description: '',
             filename: t.filename,
+            s3_video_url: t.s3_video_url,
             metadata: {
               source: t.metadata?.source || 'S3',
               song_name: t.metadata?.song_name,
@@ -179,7 +181,7 @@ export default function AuraStream() {
   return (
     <main className="relative min-h-screen w-full flex overflow-hidden font-body">
       {/* Background Engine */}
-      <AuroraBackground />
+      <AuroraBackground videoUrl={currentTrack?.s3_video_url} />
 
       {/* Live Feed View (The part that actually gets captured) */}
       <div className="flex-1 relative pointer-events-none">

@@ -1,9 +1,19 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
-export const AuroraBackground: React.FC = () => {
+const DEFAULT_VIDEO = '/video-background.mp4';
+
+interface AuroraBackgroundProps {
+  /** URL do vídeo S3 da música atual. Se não informado, usa o vídeo padrão. */
+  videoUrl?: string;
+}
+
+export const AuroraBackground: React.FC<AuroraBackgroundProps> = ({ videoUrl }) => {
   const [isStreamClient, setIsStreamClient] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [activeSrc, setActiveSrc] = useState<string>(DEFAULT_VIDEO);
+  const [fadingIn, setFadingIn] = useState(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -11,18 +21,47 @@ export const AuroraBackground: React.FC = () => {
     }
   }, []);
 
+  // Quando o videoUrl muda, faz crossfade para o novo vídeo
+  useEffect(() => {
+    const target = videoUrl || DEFAULT_VIDEO;
+    if (target === activeSrc) return;
+
+    // Fade out → troca src → fade in
+    setFadingIn(false);
+    const t = setTimeout(() => {
+      setActiveSrc(target);
+      setFadingIn(true);
+    }, 400); // duração do fade out
+
+    return () => clearTimeout(t);
+  }, [videoUrl]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Recarrega o vídeo quando o src muda
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(() => {});
+    }
+  }, [activeSrc]);
+
   return (
     <div 
       className="fixed inset-0 w-full h-full bg-slate-950 overflow-hidden" 
       style={{ zIndex: 0 }} 
     >
       <video
-        src="/video-background.mp4"
+        ref={videoRef}
+        key={activeSrc}
+        src={activeSrc}
         autoPlay
         loop
         muted
         playsInline
         className="absolute inset-0 w-full h-full object-cover z-0"
+        style={{
+          transition: 'opacity 400ms ease-in-out',
+          opacity: fadingIn ? 1 : 0,
+        }}
       />
       <div className="absolute top-0 left-0 w-full h-full opacity-60 z-10">
         {/* Cyan Blob */}
