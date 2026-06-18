@@ -53,3 +53,7 @@ server/state-cache.json
 
 # Logs de auditoria (gerados em runtime)
 logs/compliance-audit.jsonl
+
+# Logs locais
+logs/
+*.log
