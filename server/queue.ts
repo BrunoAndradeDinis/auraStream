@@ -14,9 +14,20 @@ export async function loadAudioQueue(): Promise<void> {
     const url = `${bucketUrl}/${bucketName}/${channel}/songs.json`;
     console.log(`[server] Fetching queue from cloud: ${url}`);
     
-    const res = await fetch(url);
-    if (!res.ok) {
-       console.warn(`[server] Failed to fetch remote queue from ${url}. Status: ${res.status}`);
+    let res;
+    for (let i = 0; i < 3; i++) {
+      try {
+        res = await fetch(url);
+        if (res.ok) break;
+        console.warn(`[server] Fetch attempt ${i + 1} returned status: ${res.status}, retrying...`);
+      } catch (e) {
+        console.warn(`[server] Fetch attempt ${i + 1} failed: ${(e as Error).message}, retrying...`);
+      }
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+
+    if (!res || !res.ok) {
+       console.warn(`[server] Failed to fetch remote queue from ${url}. Status: ${res?.status}`);
        return;
     }
     

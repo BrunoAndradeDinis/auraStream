@@ -4,7 +4,12 @@ source ~/.bashrc
 cd /home/ubuntu/auraStream || exit 1
 
 # Aguarda a rede e processos do sistema inicializarem (útil para o boot)
-sleep 10
+echo "Aguardando conectividade de rede para iniciar..."
+while ! curl -s --head --request GET https://br-se1.magaluobjects.com > /dev/null; do
+  sleep 2
+done
+echo "Rede disponível! Iniciando..."
+sleep 2
 
 # Remove sessão anterior do tmux se existir
 tmux kill-session -t aura 2>/dev/null
