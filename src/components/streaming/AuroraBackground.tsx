@@ -10,16 +10,9 @@ interface AuroraBackgroundProps {
 }
 
 export const AuroraBackground: React.FC<AuroraBackgroundProps> = ({ videoUrl }) => {
-  const [isStreamClient, setIsStreamClient] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [activeSrc, setActiveSrc] = useState<string>(DEFAULT_VIDEO);
   const [fadingIn, setFadingIn] = useState(true);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsStreamClient(new URLSearchParams(window.location.search).get('stream_client') === 'true');
-    }
-  }, []);
 
   // Quando o videoUrl muda, faz crossfade para o novo vídeo
   useEffect(() => {
@@ -31,17 +24,34 @@ export const AuroraBackground: React.FC<AuroraBackgroundProps> = ({ videoUrl }) 
     const t = setTimeout(() => {
       setActiveSrc(target);
       setFadingIn(true);
-    }, 400); // duração do fade out
+    }, 400);
 
     return () => clearTimeout(t);
   }, [videoUrl]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Recarrega o vídeo quando o src muda
+  // Recarrega o vídeo quando o src muda, garantindo liberação correta do
+  // decodificador anterior para evitar acúmulo de memória em lives longas.
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.load();
-      videoRef.current.play().catch(() => {});
-    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Libera o decodificador de vídeo atual ANTES de atribuir o novo src.
+    // Sem isso, o browser mantém o decodificador e seus buffers alocados,
+    // acumulando centenas de MB em várias horas de transmissão.
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+
+    video.src = activeSrc;
+    video.load();
+    video.play().catch(() => {});
+
+    // Cleanup: libera ao desmontar o componente
+    return () => {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    };
   }, [activeSrc]);
 
   return (
@@ -51,8 +61,6 @@ export const AuroraBackground: React.FC<AuroraBackgroundProps> = ({ videoUrl }) 
     >
       <video
         ref={videoRef}
-        key={activeSrc}
-        src={activeSrc}
         autoPlay
         loop
         muted
