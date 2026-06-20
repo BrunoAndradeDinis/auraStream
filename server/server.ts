@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import { state, setState } from './state';
 import { broadcast, broadcastEvent, sendToClient } from './broadcast';
@@ -7,9 +8,98 @@ import { startStream, stopStream, cancelReconnect, restartStream } from './strea
 import { startAudioWatcher, startMetadataWatcher } from './watcher';
 import { parseMetadata, validateTrack, auditLog } from './compliance';
 
-
 const PORT = 9003;
+const HTTP_PORT = 9004;
 const wss = new WebSocketServer({ port: PORT });
+
+// ─── HTTP REST Server (porta 9004) ──────────────────────────────────────────
+// Permite que o painel-stream chame a VM server-to-server (sem TLS),
+// contornando a restrição de Mixed Content do browser.
+const httpServer = http.createServer(async (req, res) => {
+  // CORS — permite chamadas do painel-stream (Vercel)
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
+  // GET /api/state — retorna o estado atual (sem streamKey)
+  if (req.method === 'GET' && req.url === '/api/state') {
+    const { streamKey: _sk, ...safeState } = state;
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(safeState));
+    return;
+  }
+
+  // POST /api/command — executa um comando (mesmo handler do WS)
+  if (req.method === 'POST' && req.url === '/api/command') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', async () => {
+      try {
+        const { event, payload } = JSON.parse(body);
+
+        switch (event) {
+          case 'media:skip':
+            if (state.currentTrack) advanceToNextValidTrack(state.currentTrack.id);
+            else advanceToNextValidTrack(null);
+            import('./stream').then(m => m.playCurrentTrackAudio());
+            broadcastEvent('media:skip', {});
+            break;
+          case 'media:play':
+            if (!state.currentTrack) advanceToNextValidTrack(null);
+            setState({ status: 'streaming' });
+            broadcast();
+            broadcastEvent('media:play', {});
+            break;
+          case 'media:pause':
+            setState({ status: 'paused' });
+            broadcast();
+            broadcastEvent('media:pause', {});
+            break;
+          case 'media:volume':
+            broadcastEvent('media:volume', payload);
+            break;
+          case 'queue:reorder': {
+            const { newOrder } = payload as { newOrder: string[] };
+            if (Array.isArray(newOrder)) {
+              const trackMap = new Map(state.queue.map(t => [t.id, t]));
+              const newQueue = newOrder.filter(id => trackMap.has(id)).map(id => trackMap.get(id)!);
+              // Adiciona tracks que não estavam no newOrder no início
+              const remaining = state.queue.filter(t => !newOrder.includes(t.id));
+              setState({ queue: [...remaining, ...newQueue] });
+              broadcast();
+            }
+            break;
+          }
+          default:
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: `Unknown command: ${event}` }));
+            return;
+        }
+
+        const { streamKey: _sk2, ...safeState2 } = state;
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(safeState2));
+      } catch (err) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  res.writeHead(404);
+  res.end('Not found');
+});
+
+httpServer.listen(HTTP_PORT, '0.0.0.0', () => {
+  console.log(`[http] REST API listening on http://0.0.0.0:${HTTP_PORT}`);
+});
 
 const clients = new Set<WebSocket>();
 

@@ -133,9 +133,12 @@
 
 .miniplayer-enter {
   animation: miniplayer-enter 300ms ease-out forwards;
-  will-change: transform, opacity;
+  /* will-change removido: forçava camada GPU permanente que nunca era liberada.
+     O compositor decide sozinho quando promover a camada. */
 }
 
 .miniplayer-glow {
+  /* glow-pulse só ativo enquanto o elemento está visível (miniplayer-enter aplicado).
+     A animação é removida junto com a classe, liberando a camada do compositor. */
   animation: glow-pulse 3s ease-in-out infinite;
 }
