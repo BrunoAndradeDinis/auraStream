@@ -55,9 +55,26 @@ const httpServer = http.createServer(async (req, res) => {
             setState({ status: 'streaming' });
             broadcast();
             broadcastEvent('media:play', {});
+            import('./stream').then(m => m.playCurrentTrackAudio());
             break;
           case 'media:pause':
             setState({ status: 'paused' });
+            broadcast();
+            broadcastEvent('media:pause', {});
+            import('./stream').then(m => m.pauseCurrentTrackAudio());
+            break;
+          case 'media:previous':
+            if (state.currentTrack) advanceToPreviousValidTrack(state.currentTrack.id);
+            else advanceToPreviousValidTrack(null);
+            import('./stream').then(m => m.playCurrentTrackAudio());
+            broadcastEvent('media:skip', {});
+            break;
+          case 'media:stop_stream':
+            import('./stream').then(m => {
+              m.cancelReconnect();
+              m.stopStream();
+            });
+            setState({ status: 'idle' });
             broadcast();
             broadcastEvent('media:pause', {});
             break;
@@ -156,6 +173,35 @@ function advanceToNextValidTrack(currentId: string | null): void {
   broadcast();
 }
 
+function advanceToPreviousValidTrack(currentId: string | null): void {
+  const queue = state.queue;
+  if (queue.length === 0) return;
+  const currentIndex = currentId ? queue.findIndex((t) => t.id === currentId) : -1;
+  let prevIndex = currentIndex === -1 ? queue.length - 1 : (currentIndex - 1 + queue.length) % queue.length;
+  let attempts = 0;
+
+  while (attempts < queue.length) {
+    const candidate = queue[prevIndex];
+    const result = validateTrack(candidate.id);
+
+    if (result.valid) {
+      setState({ currentTrack: candidate });
+      broadcast();
+      auditLog('INFO', 'track_play', candidate.id, 'APPROVED', result.metadata.source);
+      return;
+    }
+
+    auditLog('WARNING', 'compliance_skip', candidate.id, 'REJECTED', 'not_in_whitelist');
+    broadcastEvent('server:compliance_skip', { trackId: candidate.id, reason: 'not_in_whitelist' });
+    prevIndex = (prevIndex - 1 + queue.length) % queue.length;
+    attempts++;
+  }
+
+  setState({ status: 'compliance_blocked', currentTrack: null });
+  broadcast();
+}
+
+
 wss.on('connection', (ws: WebSocket) => {
   clients.add(ws);
   console.log(`[server] client connected (total: ${clients.size})`);
@@ -187,6 +233,7 @@ wss.on('connection', (ws: WebSocket) => {
         setState({ status: 'streaming' });
         broadcast();
         broadcastEvent('media:play', {});
+        import('./stream').then(m => m.playCurrentTrackAudio());
         break;
       case 'media:start_stream': {
         const keyToUse = state.streamKey || process.env.YOUTUBE || process.env.YOUTUBE_STREAM_KEY;
@@ -211,6 +258,7 @@ wss.on('connection', (ws: WebSocket) => {
         setState({ status: 'paused' });
         broadcast();
         broadcastEvent('media:pause', {});
+        import('./stream').then(m => m.pauseCurrentTrackAudio());
         break;
       case 'media:stop_stream':
         cancelReconnect();
@@ -243,6 +291,15 @@ wss.on('connection', (ws: WebSocket) => {
           advanceToNextValidTrack(state.currentTrack.id);
         } else {
           advanceToNextValidTrack(null);
+        }
+        import('./stream').then(m => m.playCurrentTrackAudio());
+        broadcastEvent('media:skip', {});
+        break;
+      case 'media:previous':
+        if (state.currentTrack) {
+          advanceToPreviousValidTrack(state.currentTrack.id);
+        } else {
+          advanceToPreviousValidTrack(null);
         }
         import('./stream').then(m => m.playCurrentTrackAudio());
         broadcastEvent('media:skip', {});
@@ -333,5 +390,5 @@ wss.on('connection', (ws: WebSocket) => {
   });
 });
 
-export { clients, wss, advanceToNextValidTrack };
+export { clients, wss, advanceToNextValidTrack, advanceToPreviousValidTrack };
 

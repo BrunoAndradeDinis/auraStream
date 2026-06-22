@@ -58,9 +58,18 @@ sudo apt-get install -y \
   libxcb-dri3-0
 
 echo "========================================"
-echo " Instalando tmux e netcat (necessários para Autostart)..."
+echo " Instalando tmux, netcat (necessários para Autostart) e ufw..."
 echo "========================================"
-sudo apt-get install -y tmux netcat-openbsd
+sudo apt-get install -y tmux netcat-openbsd ufw
+
+echo "========================================"
+echo " Configurando regras de Firewall (UFW)..."
+echo "========================================"
+sudo ufw allow 9003/tcp
+sudo ufw allow 9004/tcp
+sudo ufw reload
+echo "Portas 9003 e 9004 liberadas."
+
 
 echo "========================================"
 echo " Configurando Autostart na inicialização da VM..."
