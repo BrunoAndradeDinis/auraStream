@@ -155,7 +155,10 @@ wss.on('listening', () => {
 
     fetch(telemetryEndpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.INTERNAL_API_KEY || ''
+      },
       body: JSON.stringify({
         vmId: process.env.ACTIVE_CHANNEL || 'aurastream',
         channel: process.env.ACTIVE_CHANNEL || 'aurastream',
