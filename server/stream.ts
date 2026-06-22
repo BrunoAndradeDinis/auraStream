@@ -13,6 +13,31 @@ const MAX_ATTEMPTS = 5;
 let reconnectTimeout: NodeJS.Timeout | null = null;
 let isStopped = false;
 let activeStreamKey: string | null = null;
+let silenceInterval: NodeJS.Timeout | null = null;
+
+/**
+ * Start sending empty PCM data (silence) to FFmpeg
+ * to keep the stream alive while audio is paused.
+ */
+function startSilenceGenerator(): void {
+  if (silenceInterval) return;
+  console.log('[stream] Generating silence...');
+  // 44100 Hz * 2 channels * 2 bytes/sample = 176400 bytes/sec. We write 100ms chunks.
+  const silenceBuf = Buffer.alloc(17640); 
+  silenceInterval = setInterval(() => {
+    if (ffmpegProcess && ffmpegProcess.stdin && !ffmpegProcess.stdin.destroyed) {
+      ffmpegProcess.stdin.write(silenceBuf);
+    }
+  }, 100);
+}
+
+function stopSilenceGenerator(): void {
+  if (silenceInterval) {
+    clearInterval(silenceInterval);
+    silenceInterval = null;
+    console.log('[stream] Stopped generating silence');
+  }
+}
 
 /**
  * Resolve the absolute path of the current track's audio file.
@@ -210,12 +235,25 @@ function startAudioDecoder(audioPath: string): void {
 
 export function playCurrentTrackAudio(): void {
   if (isStopped || !activeStreamKey) return;
+  stopSilenceGenerator(); // Stop silence if we were paused
+
   const newPath = resolveAudioPath();
   if (newPath) {
     startAudioDecoder(newPath);
   } else {
     console.warn('[stream] No audio path resolved for the next track');
   }
+}
+
+export function pauseCurrentTrackAudio(): void {
+  if (audioDecoderProcess) {
+    console.log('[stream] Pausing audio (killing decoder)...');
+    const oldProcess = audioDecoderProcess;
+    audioDecoderProcess = null;
+    oldProcess.removeAllListeners('close');
+    oldProcess.kill('SIGKILL');
+  }
+  startSilenceGenerator();
 }
 
 export async function startStream(streamKey: string): Promise<void> {
@@ -357,6 +395,8 @@ export function cancelReconnect(): void {
 
 export async function stopStream(skipCancel = false): Promise<void> {
   if (!skipCancel) cancelReconnect();
+
+  stopSilenceGenerator();
 
   if (audioDecoderProcess) {
     audioDecoderProcess.kill('SIGKILL');
