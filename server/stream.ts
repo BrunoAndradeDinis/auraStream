@@ -14,6 +14,13 @@ let reconnectTimeout: NodeJS.Timeout | null = null;
 let isStopped = false;
 let activeStreamKey: string | null = null;
 let silenceInterval: NodeJS.Timeout | null = null;
+let currentVolume = 1.0; // 0.0 – 2.0
+
+/** Change the decoder volume on-the-fly (takes effect on next decoder spawn). */
+export function setVolume(v: number): void {
+  currentVolume = Math.max(0, Math.min(2, v));
+  console.log(`[stream] Volume set to ${Math.round(currentVolume * 100)}%`);
+}
 
 /**
  * Start sending empty PCM data (silence) to FFmpeg
@@ -198,6 +205,7 @@ function startAudioDecoder(audioPath: string): void {
   const p = spawn('ffmpeg', [
     '-v', 'error',
     '-i', audioPath,
+    '-af', `volume=${currentVolume.toFixed(3)}`,
     '-f', 's16le',
     '-ar', '44100',
     '-ac', '2',

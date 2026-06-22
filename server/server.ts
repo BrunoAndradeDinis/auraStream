@@ -78,9 +78,30 @@ const httpServer = http.createServer(async (req, res) => {
             broadcast();
             broadcastEvent('media:pause', {});
             break;
-          case 'media:volume':
+          case 'media:volume': {
+            const vol = typeof payload === 'number' ? payload : 1;
+            import('./stream').then(m => m.setVolume(vol));
             broadcastEvent('media:volume', payload);
             break;
+          }
+          case 'player:track_changed': {
+            const { trackId } = payload as { trackId: string };
+            const nextTrack = state.queue.find(t => t.id === trackId);
+            if (nextTrack) {
+              const result = validateTrack(nextTrack.id);
+              if (!result.valid) {
+                auditLog('WARNING', 'compliance_skip', nextTrack.id, 'REJECTED', 'not_in_whitelist');
+                broadcastEvent('server:compliance_skip', { trackId: nextTrack.id, reason: 'not_in_whitelist' });
+                advanceToNextValidTrack(nextTrack.id);
+              } else {
+                setState({ currentTrack: nextTrack, status: 'streaming' });
+                broadcast();
+                import('./stream').then(m => m.playCurrentTrackAudio());
+                auditLog('INFO', 'track_play', nextTrack.id, 'APPROVED', result.metadata.source);
+              }
+            }
+            break;
+          }
           case 'queue:reorder': {
             const { newOrder } = payload as { newOrder: string[] };
             if (Array.isArray(newOrder)) {
@@ -304,9 +325,12 @@ wss.on('connection', (ws: WebSocket) => {
         import('./stream').then(m => m.playCurrentTrackAudio());
         broadcastEvent('media:skip', {});
         break;
-      case 'media:volume':
+      case 'media:volume': {
+        const vol = typeof payload === 'number' ? payload : 1;
+        import('./stream').then(m => m.setVolume(vol));
         broadcastEvent('media:volume', payload);
         break;
+      }
       case 'queue:view': {
         const { streamKey, ...safeState } = state;
         sendToClient(ws, 'server:state_sync', safeState);
