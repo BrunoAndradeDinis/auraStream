@@ -1,0 +1,23 @@
+{
+  "queue": [
+    {
+      "id": "teste-3",
+      "filename": "teste 3 - teste 3",
+      "path": "https://parakeet-acceptable-harlequin.br-se1.magaluobjects.com/dark-fantasy/songs/musica%20(6).mp3",
+      "s3_audio_url": "https://parakeet-acceptable-harlequin.br-se1.magaluobjects.com/dark-fantasy/songs/musica%20(6).mp3",
+      "s3_video_url": "https://parakeet-acceptable-harlequin.br-se1.magaluobjects.com/dark-fantasy/video/videoplayback.mp4",
+      "album_image": "https://parakeet-acceptable-harlequin.br-se1.magaluobjects.com/dark-fantasy/images/banner.png",
+      "metadata": {
+        "artist": "teste 3",
+        "genre": "teste 3",
+        "source": "S3",
+        "song_name": "teste 3",
+        "album_image": "https://parakeet-acceptable-harlequin.br-se1.magaluobjects.com/dark-fantasy/images/banner.png",
+        "provider": "teste 3"
+      }
+    }
+  ],
+  "currentTrack": null,
+  "status": "compliance_blocked",
+  "shutdownAt": null
+}
